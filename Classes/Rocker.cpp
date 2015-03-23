@@ -5,7 +5,6 @@
 //  Created by zhuoyikang on 15-2-25.
 //
 //
-
 #include "Rocker.hpp"
 
 const double PI=3.1415;
@@ -38,7 +37,7 @@ HRocker::~HRocker()
 
 
 //启动摇杆(显示摇杆、监听摇杆触屏事件)
-void HRocker::startRocker(bool _isStopOther)
+void HRocker::startRocker(bool )
 {
     Sprite * rocker = (Sprite*)this->getChildByTag(tag_rocker);
     rocker->setVisible(true);
@@ -47,7 +46,8 @@ void HRocker::startRocker(bool _isStopOther)
     rockerBG->setVisible(true);
 
     auto touchListener = EventListenerTouchOneByOne::create();
-    touchListener->setSwallowTouches(true);
+    //设置是否想下传递触摸
+    touchListener->setSwallowTouches(false);
 
     touchListener->onTouchBegan =
         CC_CALLBACK_2(HRocker::onTouchBegan, this);
@@ -55,9 +55,9 @@ void HRocker::startRocker(bool _isStopOther)
         CC_CALLBACK_2(HRocker::onTouchMoved, this);
     touchListener->onTouchEnded =
         CC_CALLBACK_2(HRocker::onTouchEnded, this);
-    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener,
-                                                             this);
-    log("rock ed");
+
+    this->_eventDispatcher->
+        addEventListenerWithSceneGraphPriority(touchListener,this);
 }
 
 //停止摇杆(隐藏摇杆，取消摇杆的触屏监听)
@@ -125,7 +125,7 @@ bool HRocker::onTouchBegan(Touch *pTouch, Event *pEvent)
     Sprite * rocker = (Sprite*)this->getChildByTag(tag_rocker);
     if(rocker->boundingBox().containsPoint(point)){
         isCanMove = true;
-        log("begin");
+        //log("begin");
     }
 
     return true;
@@ -161,23 +161,23 @@ void HRocker::onTouchMoved(Touch *pTouch, Event *pEvent)
     {
         rocketDirection=rocker_right;
         rocketRun=false;
-        log("%d",rocketDirection);
+        //log("%d",rocketDirection);
     }
     else if(angle>=PI/4&&angle<3*PI/4)
     {
         rocketDirection=rocker_up;
-        log("%d",rocketDirection);
+        //log("%d",rocketDirection);
     }
     else if((angle>=3*PI/4&&angle<=PI)||(angle>=-PI&&angle<-3*PI/4))
     {
         rocketDirection=rocker_left;
         rocketRun=true;
-        log("%d",rocketDirection);
+        //log("%d",rocketDirection);
     }
     else if(angle>=-3*PI/4&&angle<-PI/4)
     {
         rocketDirection=rocker_down;
-        log("%d",rocketDirection);
+        //log("%d",rocketDirection);
     }
 }
 
@@ -193,12 +193,9 @@ void HRocker::onTouchEnded(Touch *pTouch, Event *pEvent)
     rocker->runAction(MoveTo::create(0.08f,rockerBG->getPosition()));
     isCanMove = false;
     rocketDirection=rocker_stay;
-    log("%d",rocketDirection);
-    log("end");
 }
 
-
-    //获取方向
+//获取方向
 int HRocker::GetDirection()
 {
     return this->rocketDirection;

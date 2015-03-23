@@ -52,6 +52,8 @@ class Bubble: public cocos2d::Node
 {
 public:
     Bubble();
+    Bubble(int time);
+
     //状态变化
     void StateTest();
 
@@ -64,6 +66,10 @@ public:
 
     void SetStatus(int status);
     int GetStatus();
+
+    // 检查状态
+    int CheckStatus(int time);
+
 private:
     void setStatusEnd();
 
@@ -71,6 +77,9 @@ private:
     int _power;  //破坏范围.
     CocosStudioRes* _powerRes[wave_power_max];
     CocosStudioRes _waveRes[bubble_max];
+
+    //爆炸时间.
+    int _exposeTime;
 };
 
 

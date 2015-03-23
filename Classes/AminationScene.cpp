@@ -52,7 +52,7 @@ bool Amination::init()
     scheduleUpdate();
 
     auto listener = EventListenerTouchOneByOne::create();
-    listener->onTouchBegan = [&](Touch *touch, Event *unused_event)->bool { return true; };
+    listener->onTouchBegan = [&](Touch *, Event *)->bool { return true; };
     listener->onTouchEnded = CC_CALLBACK_2(Amination::onTouchEnded, this);
     this->_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
@@ -60,7 +60,7 @@ bool Amination::init()
 }
 
 
-void Amination::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event)
+void Amination::onTouchEnded(cocos2d::Touch *, cocos2d::Event *)
 {
 //    auto touchLocation = touch->getLocation();
 //    log("current position x %f y %f", touchLocation.x, touchLocation.y);

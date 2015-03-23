@@ -34,7 +34,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         director->setOpenGLView(glview);
     }
 
-    glview->setDesignResolutionSize(960, 640, ResolutionPolicy::EXACT_FIT);
+    glview->setDesignResolutionSize(1152, 640, ResolutionPolicy::EXACT_FIT);
     // turn on display FPS
     director->setDisplayStats(true);
 
@@ -42,7 +42,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-    auto scene = BubbleScene::createScene();
+    auto scene = BeachScene::createScene();
 
     // run
     director->runWithScene(scene);

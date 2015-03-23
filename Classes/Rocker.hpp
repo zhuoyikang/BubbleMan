@@ -22,11 +22,11 @@ typedef enum {
 
 
 typedef enum {
-    rocker_stay,
+    rocker_left,
     rocker_right,
     rocker_up,
-    rocker_left,
-    rocker_down
+    rocker_down,
+    rocker_stay,
 }tagDirection;
 
 class HRocker : public Layer

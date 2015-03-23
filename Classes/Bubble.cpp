@@ -42,7 +42,6 @@ static struct WaveDirectFactor WavePowerFactorMap[]={
     {wave_power_Below,0,-1},
 };
 
-
 //动作表.
 static struct BubbleActionItem WaveActionsMap[] = { //
     {bubble_default,"Bubble/BubbleDefault.csb"},
@@ -53,7 +52,6 @@ static struct BubbleActionItem WaveActionsMap[] = { //
     {wave_top_end,"Bubble/WaveTopEnd.csb"},
     {wave_below_end,"Bubble/WaveBelowEnd.csb"}
 };
-
 
 //启动默认泡泡/
 void Bubble::initDefault()
@@ -151,13 +149,19 @@ void Bubble::releaseExplose()
     }
 }
 
+Bubble::Bubble(int time):
+    _power(1),_exposeTime(time)
+{
+    _status = bubble_sts_def;
+    initDefault();
+}
+
 
 Bubble::Bubble():_power(1)
 {
     _status = bubble_sts_def;
     initDefault();
 }
-
 
 void Bubble::SetStatus(int status)
 {
@@ -199,4 +203,21 @@ void Bubble::StateTest()
     }else if(this->GetStatus()==bubble_sts_end){
         this->SetStatus(bubble_sts_def);
     }
+}
+
+
+// 检查状态，返回最新状态.
+int Bubble::CheckStatus(int time)
+{
+    if((time > this->_exposeTime) && (_status==bubble_default)) {
+        this->SetStatus(bubble_sts_expose);
+        return bubble_sts_expose;
+    }
+
+    //爆炸后保持2s.
+    if((time > (this->_exposeTime+2)) && (_status==bubble_sts_expose)) {
+        this->SetStatus(bubble_sts_end);
+        return bubble_sts_end;
+    }
+    return this->_status;
 }

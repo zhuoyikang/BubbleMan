@@ -7,11 +7,13 @@
   <image source="meta_tiles2.png" width="134" height="68"/>
   <tile id="0">
    <properties>
+    <property name="CanBeBomb" value="True"/>
     <property name="Collidable" value="True"/>
    </properties>
   </tile>
   <tile id="1">
    <properties>
+    <property name="CanBeBomb" value="False"/>
     <property name="Collidable" value="True"/>
    </properties>
   </tile>

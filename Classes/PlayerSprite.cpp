@@ -56,9 +56,11 @@ int PlayerSprite::CurrentDirection()
     return _currentDirection;
 }
 
-
 void PlayerSprite::SetDirection(int direction)
 {
+    if(direction< 0 || direction >= animation_max){
+        return;
+    }
     if(_currentDirection==direction){
         return;
     }

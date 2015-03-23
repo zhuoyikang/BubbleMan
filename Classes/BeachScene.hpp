@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include "Rocker.hpp"
 #include "PlayerSprite.hpp"
+#include "Bubble.hpp"
+#include "BubbleManager.hpp"
 
 
 class BeachScene : public cocos2d::Layer
@@ -20,17 +22,27 @@ public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
 
-    // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
     virtual bool init();
 
     void update(float dt) override;
+    virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *);
+
+    //用来计算Player移动坐标.
+    Point playerNextPosition(Point old, int direct);
+    //检查位置实时被阻塞.
+    bool doesPositionBlock(Point old,int direct);
+
+    //根据位置计算tile坐标.
+    Point tileCoordForPosition(cocos2d::Point position);
 
     // implement the "static create()" method manually
     CREATE_FUNC(BeachScene);
 private:
+
+    BubbleManager *_bubbleManager;
+
     void setViewPointCenter(cocos2d::Point position);
     void setPlayerPosition(cocos2d::Point position);
-    cocos2d::Point tileCoordForPosition(cocos2d::Point position);
 
     cocos2d::TMXTiledMap *_tileMap;
     cocos2d::Sprite * _player;
@@ -40,7 +52,7 @@ private:
 
     HRocker *_rocker;
     PlayerSprite *_playerSprite;
-
+    //Bubble *_bubble;
 };
 
 
