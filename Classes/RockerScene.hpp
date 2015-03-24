@@ -21,7 +21,7 @@ public:
 
     CREATE_FUNC(RockerScene);
 private:
-    HRocker *_rocker;
+    BRocker *_rocker;
 };
 
 

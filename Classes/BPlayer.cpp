@@ -1,12 +1,12 @@
 //
-//  PlayerSprite.cpp
+//  BPlayer.cpp
 //  T4
 //
 //  Created by zhuoyikang on 15-3-17.
 //
 //
 
-#include "PlayerSprite.hpp"
+#include "BPlayer.hpp"
 #include "cocostudio/CocoStudio.h"
 #include "CocosGUI.h"
 
@@ -14,7 +14,7 @@
 USING_NS_CC;
 
 
-PlayerSprite::PlayerSprite()
+BPlayer::BPlayer()
 {
     _animationnNodes[animation_front] =
         CSLoader::createNode("Animation/animation_front.csb");
@@ -43,7 +43,7 @@ PlayerSprite::PlayerSprite()
     SetDirection(animation_front);
 }
 
-void PlayerSprite::directionInit(int direction)
+void BPlayer::directionInit(int direction)
 {
     this->addChild(_animationnNodes[direction]);
     _animationnNodes[direction]->runAction(_animationnActions[direction]);
@@ -51,12 +51,12 @@ void PlayerSprite::directionInit(int direction)
     _animationnNodes[direction]->setVisible(false);
 }
 
-int PlayerSprite::CurrentDirection()
+int BPlayer::CurrentDirection()
 {
     return _currentDirection;
 }
 
-void PlayerSprite::SetDirection(int direction)
+void BPlayer::SetDirection(int direction)
 {
     if(direction< 0 || direction >= animation_max){
         return;

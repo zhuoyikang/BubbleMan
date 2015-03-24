@@ -9,9 +9,9 @@
 
 const double PI=3.1415;
 
-HRocker* HRocker::createRocker(const char *bg, const char *bc, Point position)
+BRocker* BRocker::createRocker(const char *bg, const char *bc, Point position)
 {
-    HRocker *layer = HRocker::create();
+    BRocker *layer = BRocker::create();
     if(layer){
         layer->rockerInit(bc, bg, position);
     }
@@ -21,7 +21,7 @@ HRocker* HRocker::createRocker(const char *bg, const char *bc, Point position)
 }
 
 
-bool HRocker::init()
+bool BRocker::init()
 {
     if(!Layer::init()){
         return false;
@@ -31,13 +31,13 @@ bool HRocker::init()
     return true;
 }
 
-HRocker::~HRocker()
+BRocker::~BRocker()
 {
 }
 
 
 //启动摇杆(显示摇杆、监听摇杆触屏事件)
-void HRocker::startRocker(bool )
+void BRocker::startRocker(bool )
 {
     Sprite * rocker = (Sprite*)this->getChildByTag(tag_rocker);
     rocker->setVisible(true);
@@ -50,18 +50,18 @@ void HRocker::startRocker(bool )
     touchListener->setSwallowTouches(false);
 
     touchListener->onTouchBegan =
-        CC_CALLBACK_2(HRocker::onTouchBegan, this);
+        CC_CALLBACK_2(BRocker::onTouchBegan, this);
     touchListener->onTouchMoved =
-        CC_CALLBACK_2(HRocker::onTouchMoved, this);
+        CC_CALLBACK_2(BRocker::onTouchMoved, this);
     touchListener->onTouchEnded =
-        CC_CALLBACK_2(HRocker::onTouchEnded, this);
+        CC_CALLBACK_2(BRocker::onTouchEnded, this);
 
     this->_eventDispatcher->
         addEventListenerWithSceneGraphPriority(touchListener,this);
 }
 
 //停止摇杆(隐藏摇杆，取消摇杆的触屏监听)
-void HRocker::stopRocker()
+void BRocker::stopRocker()
 {
     Sprite * rocker = (Sprite*)this->getChildByTag(tag_rocker);
     rocker->setVisible(false);
@@ -74,7 +74,7 @@ void HRocker::stopRocker()
 
 
 //自定义初始化函数
-void HRocker::rockerInit(const char* rockerImageName,const char* rockerBGImageName,
+void BRocker::rockerInit(const char* rockerImageName,const char* rockerBGImageName,
                          Point position)
 {
     Sprite *spRockerBG = Sprite::create(rockerBGImageName);
@@ -93,7 +93,7 @@ void HRocker::rockerInit(const char* rockerImageName,const char* rockerBGImageNa
 }
 
 //获取当前摇杆与用户触屏点的角度
-float HRocker::getRad(Point pos1,Point pos2)
+float BRocker::getRad(Point pos1,Point pos2)
 {
     float px1 = pos1.x;
     float py1 = pos1.y;
@@ -119,7 +119,7 @@ Point getAngelePosition(float r,float angle){
 
 
 //触屏事件
-bool HRocker::onTouchBegan(Touch *pTouch, Event *pEvent)
+bool BRocker::onTouchBegan(Touch *pTouch, Event *pEvent)
 {
     Point point = pTouch->getLocation();
     Sprite * rocker = (Sprite*)this->getChildByTag(tag_rocker);
@@ -131,7 +131,7 @@ bool HRocker::onTouchBegan(Touch *pTouch, Event *pEvent)
     return true;
 }
 
-void HRocker::onTouchMoved(Touch *pTouch, Event *pEvent)
+void BRocker::onTouchMoved(Touch *pTouch, Event *pEvent)
 {
     if(!isCanMove){
         return;
@@ -181,7 +181,7 @@ void HRocker::onTouchMoved(Touch *pTouch, Event *pEvent)
     }
 }
 
-void HRocker::onTouchEnded(Touch *pTouch, Event *pEvent)
+void BRocker::onTouchEnded(Touch *pTouch, Event *pEvent)
 {
     if (!isCanMove)
     {
@@ -196,7 +196,7 @@ void HRocker::onTouchEnded(Touch *pTouch, Event *pEvent)
 }
 
 //获取方向
-int HRocker::GetDirection()
+int BRocker::GetDirection()
 {
     return this->rocketDirection;
 }

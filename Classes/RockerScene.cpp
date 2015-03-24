@@ -33,7 +33,7 @@ bool RockerScene::init()
         return false;
     }
 
-    _rocker = HRocker::createRocker("Rocker/joystick_bg.png",
+    _rocker = BRocker::createRocker("Rocker/joystick_bg.png",
                                    "Rocker/joystick_center.png",
                                    Point(110,60));
     this->addChild(_rocker);

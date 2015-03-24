@@ -1,17 +1,29 @@
 //
-//  PlayerSprite.h
+//  BPlayer.h
 //  T4
 //
 //  Created by zhuoyikang on 15-3-17.
 //
 //
 
-#ifndef __T4__PlayerSprite__
-#define __T4__PlayerSprite__
+#ifndef __T4__BPlayer__
+#define __T4__BPlayer__
 
 #include <stdio.h>
 #include "cocos2d.h"
 #include "const.hpp"
+
+
+
+/**
+ * 玩家三种状态
+ */
+enum {
+    player_sts_free,
+    player_sts_stuck,
+    player_sts_die
+};
+
 
 enum {
     animation_left = 0,
@@ -21,10 +33,10 @@ enum {
     animation_max = 4
 };
 
-class PlayerSprite: public cocos2d::Node
+class BPlayer: public cocos2d::Node
 {
 public:
-    PlayerSprite();
+    BPlayer();
     void SetDirection(int direction);
     int CurrentDirection();
 
@@ -36,4 +48,4 @@ private:
     cocos2d::Node * _animationnNodes[animation_max];
 };
 
-#endif /* defined(__T4__PlayerSprite__) */
+#endif /* defined(__T4__BPlayer__) */

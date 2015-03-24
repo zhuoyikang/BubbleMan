@@ -18,7 +18,7 @@ USING_NS_CC;
 typedef enum {
     tag_rocker,
     tag_rockerBG,
-}tagForHRocker;
+}tagForBRocker;
 
 
 typedef enum {
@@ -29,15 +29,15 @@ typedef enum {
     rocker_stay,
 }tagDirection;
 
-class HRocker : public Layer
+class BRocker : public Layer
 {
  public:
     virtual bool init();
-    virtual ~HRocker();
-    CREATE_FUNC(HRocker);
+    virtual ~BRocker();
+    CREATE_FUNC(BRocker);
 
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
-    static HRocker* createRocker(const char *bg, const char *bc, Point);
+    static BRocker* createRocker(const char *bg, const char *bc, Point);
 
     //启动摇杆(显示摇杆、监听摇杆触屏事件)
     void startRocker(bool _isStopOther);

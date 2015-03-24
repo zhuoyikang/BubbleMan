@@ -1,15 +1,11 @@
-//
-//  BubbleManager.cpp
-//  T4
-//
-//  Created by zhuoyikang on 15-3-23.
-//
-//
+/**
+ * 泡泡管理
+ */
 
 #include "BubbleManager.hpp"
+#include "BTime.hpp"
 
 USING_NS_CC;
-
 
 bool BubbleManager::init()
 {
@@ -22,25 +18,45 @@ bool BubbleManager::init()
     return true;
 }
 
-void BubbleManager::MakeBubble(int, Point position)
+int BubbleManager::newId()
 {
-    int now=getCurrentUtcSecond();
-    auto _bubble = new Bubble(now+2);
+    return ++_id;
+}
+
+void BubbleManager::MakeBubble(int power, cocos2d::Point position)
+{
+    MakeBubble(newId(),power,position);
+}
+
+void BubbleManager::MakeBubble(int id,int power, Point position)
+{
+    int now=BTime::GetCurrentUtcSecond();
+    auto _bubble = new Bubble(id,power,now+2);
     _bubble->setPosition(position);
     this->addChild(_bubble);
     this->_bubbleList.pushBack(_bubble);
 }
 
+void BubbleManager::Explose(int id)
+{
+    for(cocos2d::Vector<Bubble*>::iterator iter=_bubbleList.begin();
+        iter!=_bubbleList.end(); ) {
+        if((*iter)->GetId()==id){
+            (*iter)->SetStatus(bubble_sts_expose);
+        }else{
+            iter++;
+        }
+    }
+}
 
-// 将已经爆炸的泡泡删除.
 void BubbleManager::update(float)
 {
-    int now=getCurrentUtcSecond();
+    int now=BTime::GetCurrentUtcSecond();
     log("BubbleManager::update %d",now);
     cocos2d::Vector<Bubble*> deleteList;
     for(cocos2d::Vector<Bubble*>::iterator iter=_bubbleList.begin();
         iter!=_bubbleList.end(); ) {
-        if((*iter)->CheckStatus(now) == bubble_sts_end){
+        if((*iter)->UpdateStatus(now) == bubble_sts_end){
             this->removeChild(*iter);
             log("delete");
             iter=_bubbleList.erase(iter);
@@ -48,13 +64,4 @@ void BubbleManager::update(float)
             iter++;
         }
     }
-}
-
-// 获取当前的utc秒数
-int BubbleManager::getCurrentUtcSecond()
-{
-    struct  timeval    tv;
-    struct  timezone   tz;
-    gettimeofday(&tv,&tz);
-    return tv.tv_sec;
 }

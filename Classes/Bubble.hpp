@@ -1,10 +1,6 @@
-//
-//  Bubble.h
-//  T4
-//
-//  Created by zhuoyikang on 15-3-20.
-//
-//
+/**
+ * 泡泡
+ */
 
 #ifndef __T4__Bubble__
 #define __T4__Bubble__
@@ -41,6 +37,11 @@ enum {
     bubble_sts_end
 };
 
+/**
+ * 泡泡爆炸后停留时间
+ */
+#define BUBBLE_EXPOSE_KEEP_TIME 2
+
 
 struct CocosStudioRes {
     cocos2d::Node* Node;
@@ -51,34 +52,57 @@ struct CocosStudioRes {
 class Bubble: public cocos2d::Node
 {
 public:
-    Bubble();
-    Bubble(int time);
+    Bubble(int id,int power,int time);
 
-    //状态变化
+    /**
+     * 自动状态变化，每调用一次状态变化一次
+     */
     void StateTest();
 
-    //泡泡爆炸
     void initExplose();
     void releaseExplose();
 
     void initDefault();
     void releaseDefault();
 
+    /**
+     * 设置泡泡的各种状态，设置后有各种效果
+     * @param status @see bubble_sts_def
+     */
     void SetStatus(int status);
     int GetStatus();
 
-    // 检查状态
-    int CheckStatus(int time);
+    inline int GetId() {
+        return _id;
+    }
+
+    /**
+     * 根据爆炸时间检查状态，并执行变化
+     * @param time 泡泡是根据当前时间time来检查变化的
+     * @return 返回泡泡的最新状态
+     */
+    int UpdateStatus(int time);
 
 private:
     void setStatusEnd();
-
     int _status;
-    int _power;  //破坏范围.
+
     CocosStudioRes* _powerRes[wave_power_max];
     CocosStudioRes _waveRes[bubble_max];
 
-    //爆炸时间.
+    /**
+     * 炸弹ID.唯一标识
+     */
+    int _id;
+
+    /**
+     * 十字破坏范围.
+     */
+    int _power;
+
+    /**
+     * 爆炸时间.
+     */
     int _exposeTime;
 };
 

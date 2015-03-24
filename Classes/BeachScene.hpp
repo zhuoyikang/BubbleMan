@@ -1,59 +1,95 @@
-//
-//  BeachScene.h
-//  T4
-//
-//  Created by zhuoyikang on 15-3-17.
-//
-//
+/**
+ * 游戏战斗场景
+ */
 
 #ifndef __T4__BeachScene__
 #define __T4__BeachScene__
 
 #include <stdio.h>
 #include "Rocker.hpp"
-#include "PlayerSprite.hpp"
+#include "BPlayer.hpp"
 #include "Bubble.hpp"
 #include "BubbleManager.hpp"
 
-
+/**
+ * 游戏战斗场景
+ */
 class BeachScene : public cocos2d::Layer
 {
 public:
-    // there's no 'id' in cpp, so we recommend returning the class instance pointer
     static cocos2d::Scene* createScene();
-
     virtual bool init();
 
+    /**
+     * 定时器刷新
+     */
     void update(float dt) override;
+
+    /**
+     * 玩家触屏
+     */
     virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *);
 
-    //用来计算Player移动坐标.
+    /**
+     * 用来计算Player移动坐标.
+     */
     Point playerNextPosition(Point old, int direct);
-    //检查位置实时被阻塞.
+
+    /**
+     * 检查位置实时被阻塞.
+     */
     bool doesPositionBlock(Point old,int direct);
 
-    //根据位置计算tile坐标.
+    /**
+     * 根据位置计算tile坐标.
+     */
     Point tileCoordForPosition(cocos2d::Point position);
 
-    // implement the "static create()" method manually
+    /**
+     * 设置某个瓦片被泡泡炸毁
+     */
+    void tileExpolsed(cocos2d::Point tileCoord);
+
+
     CREATE_FUNC(BeachScene);
+
 private:
 
-    BubbleManager *_bubbleManager;
-
+    /**
+     * 设置视点
+     */
     void setViewPointCenter(cocos2d::Point position);
+
+    /**
+     * 设置玩家的位置
+     */
     void setPlayerPosition(cocos2d::Point position);
 
+private:
+
+    /**
+     * 泡泡管理
+     */
+    BubbleManager *_bubbleManager;
+
+    /**
+     * 各种场景元素
+     */
     cocos2d::TMXTiledMap *_tileMap;
     cocos2d::Sprite * _player;
     cocos2d::TMXLayer *_background;
     cocos2d::TMXLayer *_meta;
     cocos2d::TMXLayer *_foreground;
 
-    HRocker *_rocker;
-    PlayerSprite *_playerSprite;
-    //Bubble *_bubble;
+    /**
+     * 摇杆
+     */
+    BRocker *_rocker;
+
+    /**
+     * 玩家
+     */
+    BPlayer *_playerSprite;
 };
 
-
-#endif /* defined(__T4__BeachScene__) */
+#endif

@@ -45,7 +45,7 @@ bool BubbleScene::init()
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
-    _bubble = new Bubble();
+    _bubble = new Bubble(1,3,2000000000);
     addChild(_bubble);
     _bubble->setPosition(Point(visibleSize.width/2, visibleSize.height/2));
 

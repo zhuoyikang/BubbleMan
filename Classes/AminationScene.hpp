@@ -13,7 +13,7 @@
 #include "cocos2d.h"
 #include "cocostudio/CocoStudio.h"
 #include "CocosGUI.h"
-#include "PlayerSprite.hpp"
+#include "BPlayer.hpp"
 
 
 
@@ -34,7 +34,7 @@ public:
     CREATE_FUNC(Amination);
 
 private:
-    PlayerSprite *_player_sprite;
+    BPlayer *_bplayer;
 };
 
 

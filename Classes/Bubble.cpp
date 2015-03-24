@@ -10,6 +10,7 @@
 #include "cocostudio/CocoStudio.h"
 #include "CocosGUI.h"
 #include <assert.h>
+#include "BTime.hpp"
 
 USING_NS_CC;
 
@@ -149,15 +150,8 @@ void Bubble::releaseExplose()
     }
 }
 
-Bubble::Bubble(int time):
-    _power(1),_exposeTime(time)
-{
-    _status = bubble_sts_def;
-    initDefault();
-}
-
-
-Bubble::Bubble():_power(1)
+Bubble::Bubble(int id,int power,int time)
+    :_id(id),_power(power),_exposeTime(time)
 {
     _status = bubble_sts_def;
     initDefault();
@@ -181,7 +175,9 @@ void Bubble::SetStatus(int status)
         initDefault();
     }
 
+    //设置为爆炸后，设置其爆炸时间为当前时间
     if(status==bubble_sts_expose){
+        _exposeTime = BTime::GetCurrentUtcSecond();
         initExplose();
     }
 
@@ -193,7 +189,6 @@ int Bubble::GetStatus()
     return this->_status;
 }
 
-//状态变化
 void Bubble::StateTest()
 {
     if(this->GetStatus()==bubble_sts_def) {
@@ -206,8 +201,7 @@ void Bubble::StateTest()
 }
 
 
-// 检查状态，返回最新状态.
-int Bubble::CheckStatus(int time)
+int Bubble::UpdateStatus(int time)
 {
     if((time > this->_exposeTime) && (_status==bubble_default)) {
         this->SetStatus(bubble_sts_expose);
@@ -215,9 +209,11 @@ int Bubble::CheckStatus(int time)
     }
 
     //爆炸后保持2s.
-    if((time > (this->_exposeTime+2)) && (_status==bubble_sts_expose)) {
+    if((time > (this->_exposeTime+BUBBLE_EXPOSE_KEEP_TIME)) &&
+       (_status==bubble_sts_expose)) {
         this->SetStatus(bubble_sts_end);
         return bubble_sts_end;
     }
+
     return this->_status;
 }

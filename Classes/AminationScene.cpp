@@ -45,9 +45,9 @@ bool Amination::init()
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
-    _player_sprite = new PlayerSprite();
-    addChild(_player_sprite);
-    _player_sprite->setPosition(Point(visibleSize.width/2, visibleSize.height/2));
+    _bplayer = new BPlayer();
+    addChild(_bplayer);
+    _bplayer->setPosition(Point(visibleSize.width/2, visibleSize.height/2));
 
     scheduleUpdate();
 
@@ -64,7 +64,7 @@ void Amination::onTouchEnded(cocos2d::Touch *, cocos2d::Event *)
 {
 //    auto touchLocation = touch->getLocation();
 //    log("current position x %f y %f", touchLocation.x, touchLocation.y);
-    int currentDirection = ( _player_sprite->CurrentDirection()+1) % animation_max;
-    log("current direction %d %d", currentDirection, _player_sprite->CurrentDirection());
-    _player_sprite->SetDirection(currentDirection);
+    int currentDirection = ( _bplayer->CurrentDirection()+1) % animation_max;
+    log("current direction %d %d", currentDirection, _bplayer->CurrentDirection());
+    _bplayer->SetDirection(currentDirection);
 }
