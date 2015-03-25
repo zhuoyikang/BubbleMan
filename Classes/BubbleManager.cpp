@@ -18,11 +18,6 @@ bool BubbleManager::init()
     return true;
 }
 
-int BubbleManager::newId()
-{
-    return ++_id;
-}
-
 void BubbleManager::MakeBubble(int power, cocos2d::Point position)
 {
     MakeBubble(newId(),power,position);
@@ -37,16 +32,21 @@ void BubbleManager::MakeBubble(int id,int power, Point position)
     this->_bubbleList.pushBack(_bubble);
 }
 
-void BubbleManager::Explose(int id)
+void BubbleManager::SetStatus(int id,int status)
 {
     for(cocos2d::Vector<Bubble*>::iterator iter=_bubbleList.begin();
         iter!=_bubbleList.end(); ) {
-        if((*iter)->GetId()==id){
-            (*iter)->SetStatus(bubble_sts_expose);
+        if((*iter)->GetID()==id){
+            (*iter)->SetStatus(status);
         }else{
             iter++;
         }
     }
+}
+
+void BubbleManager::Explose(int id)
+{
+    this->SetStatus(id,bubble_sts_expose);
 }
 
 void BubbleManager::update(float)

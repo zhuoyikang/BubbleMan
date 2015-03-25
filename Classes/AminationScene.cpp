@@ -66,5 +66,5 @@ void Amination::onTouchEnded(cocos2d::Touch *, cocos2d::Event *)
 //    log("current position x %f y %f", touchLocation.x, touchLocation.y);
     int currentDirection = ( _bplayer->CurrentDirection()+1) % animation_max;
     log("current direction %d %d", currentDirection, _bplayer->CurrentDirection());
-    _bplayer->SetDirection(currentDirection);
+    _bplayer->SetAnimation(currentDirection);
 }

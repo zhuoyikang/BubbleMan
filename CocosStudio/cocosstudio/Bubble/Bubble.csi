@@ -1,0 +1,43 @@
+<PlistInfoProjectFile>
+  <PropertyGroup Type="Plist" Name="Bubble" ID="f2e9b3fe-d133-4c33-abce-e330b81c1ec3" Version="2.1.2.0" />
+  <Content ExportType="Png" SortAlgorithm="MaxRects" PicturePadding="0" AllowRotation="True" AllowAnySize="False" AllowTrim="False" ctype="PlistInfoData">
+    <ImageFiles>
+      <FilePathData Path="Bubble/bubble_default_01.png" />
+      <FilePathData Path="Bubble/bubble_default_02.png" />
+      <FilePathData Path="Bubble/bubble_default_03.png" />
+      <FilePathData Path="Bubble/bubble_default_04.png" />
+      <FilePathData Path="Bubble/bubble_default_05.png" />
+      <FilePathData Path="Bubble/waves_right_end_01.png" />
+      <FilePathData Path="Bubble/waves_right_end_02.png" />
+      <FilePathData Path="Bubble/waves_right_end_03.png" />
+      <FilePathData Path="Bubble/waves_right_end_04.png" />
+      <FilePathData Path="Bubble/waves_right_end_05.png" />
+      <FilePathData Path="Bubble/waves_right_end_06.png" />
+      <FilePathData Path="Bubble/waves_middle_01.png" />
+      <FilePathData Path="Bubble/waves_middle_02.png" />
+      <FilePathData Path="Bubble/waves_middle_03.png" />
+      <FilePathData Path="Bubble/waves_middle_04.png" />
+      <FilePathData Path="Bubble/waves_middle_05.png" />
+      <FilePathData Path="Bubble/waves_middle_06.png" />
+      <FilePathData Path="Bubble/waves_right_01.png" />
+      <FilePathData Path="Bubble/waves_right_02.png" />
+      <FilePathData Path="Bubble/waves_right_03.png" />
+      <FilePathData Path="Bubble/waves_right_04.png" />
+      <FilePathData Path="Bubble/waves_right_05.png" />
+      <FilePathData Path="Bubble/waves_right_06.png" />
+      <FilePathData Path="Bubble/waves_top_01.png" />
+      <FilePathData Path="Bubble/waves_top_02.png" />
+      <FilePathData Path="Bubble/waves_top_03.png" />
+      <FilePathData Path="Bubble/waves_top_04.png" />
+      <FilePathData Path="Bubble/waves_top_05.png" />
+      <FilePathData Path="Bubble/waves_top_06.png" />
+      <FilePathData Path="Bubble/waves_top_end_01.png" />
+      <FilePathData Path="Bubble/waves_top_end_02.png" />
+      <FilePathData Path="Bubble/waves_top_end_03.png" />
+      <FilePathData Path="Bubble/waves_top_end_04.png" />
+      <FilePathData Path="Bubble/waves_top_end_05.png" />
+      <FilePathData Path="Bubble/waves_top_end_06.png" />
+    </ImageFiles>
+    <MaxSize Width="1024" Height="1024" />
+  </Content>
+</PlistInfoProjectFile>

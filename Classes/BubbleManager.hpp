@@ -5,6 +5,7 @@
 #ifndef __T4__BubbleManager__
 #define __T4__BubbleManager__
 
+#include "BidGen.hpp"
 #include "Bubble.hpp"
 #include "cocos2d.h"
 
@@ -12,7 +13,7 @@
 /**
  * 管理和生成场景中出现的所有Bubble.
  */
-class BubbleManager: public cocos2d::Layer
+class BubbleManager: public cocos2d::Layer, private BIdGen
 {
 public:
     virtual bool init();
@@ -36,25 +37,16 @@ public:
      */
     void Explose(int id);
 
+    void SetStatus(int id,int status);
+
     /**
      * 自动根据泡泡的爆炸时间计算泡泡的爆炸和销毁状态
      */
     void update(float dt) override;
 
     CREATE_FUNC(BubbleManager);
-private:
-
-    /**
-     * @return 生成一个新的泡泡ID.
-     */
-    int newId();
 
 private:
-    /**
-     * 泡泡的唯一id
-     */
-    int _id;
-
     /**
      * 所有的泡泡列表
      */

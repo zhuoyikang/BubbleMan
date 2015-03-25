@@ -9,6 +9,7 @@
 #include <string>
 #include "cocos2d.h"
 #include "const.hpp"
+#include "BIdGen.hpp"
 
 using namespace std;
 
@@ -49,7 +50,7 @@ struct CocosStudioRes {
 };
 
 
-class Bubble: public cocos2d::Node
+class Bubble: public cocos2d::Node, public BIdentity
 {
 public:
     Bubble(int id,int power,int time);
@@ -72,7 +73,7 @@ public:
     void SetStatus(int status);
     int GetStatus();
 
-    inline int GetId() {
+    inline int GetID() {
         return _id;
     }
 
@@ -89,11 +90,6 @@ private:
 
     CocosStudioRes* _powerRes[wave_power_max];
     CocosStudioRes _waveRes[bubble_max];
-
-    /**
-     * 炸弹ID.唯一标识
-     */
-    int _id;
 
     /**
      * 十字破坏范围.

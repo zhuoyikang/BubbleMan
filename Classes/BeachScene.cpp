@@ -52,7 +52,7 @@ bool BeachScene::init()
     addChild(_playerSprite,1);
     //_playerSprite->setAnchorPoint(Vec2(0.5,0));
     //_playerSprite->setPosition(Point(visibleSize.width/3*1, visibleSize.height/2));
-    _playerSprite->setPosition(Point(64, 132));
+    _playerSprite->BPlayer::setPosition(Point(64, 132));
 
     scheduleUpdate();
 
@@ -64,6 +64,11 @@ bool BeachScene::init()
 
     _bubbleManager=BubbleManager::create();
     addChild(_bubbleManager);
+
+
+    _playerManager=BPlayerManager::create();
+    addChild(_playerManager);
+
     return true;
 }
 

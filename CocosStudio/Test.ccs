@@ -1,0 +1,85 @@
+<Solution>
+  <PropertyGroup Name="Test" Version="2.1.2.0" Type="CocosStudio" />
+  <SolutionFolder>
+    <Group ctype="ResourceGroup">
+      <RootFolder Name=".">
+        <Folder Name="Animation">
+          <PlistInfo Name="action.csi" Type="Plist" />
+          <Image Name="xj_y_move_back_01.png" />
+          <Image Name="xj_y_move_back_02.png" />
+          <Image Name="xj_y_move_back_03.png" />
+          <Image Name="xj_y_move_back_04.png" />
+          <Project Name="animation_back.csd" Type="Node" />
+          <Project Name="animation_front.csd" Type="Node" />
+          <Image Name="xj_y_move_front_01.png" />
+          <Image Name="xj_y_move_front_02.png" />
+          <Image Name="xj_y_move_front_03.png" />
+          <Image Name="xj_y_move_front_04.png" />
+          <Project Name="animation_left.csd" Type="Node" />
+          <Image Name="xj_y_move_left_01.png" />
+          <Image Name="xj_y_move_left_02.png" />
+          <Image Name="xj_y_move_left_03.png" />
+          <Image Name="xj_y_move_left_04.png" />
+          <Project Name="animation_right.csd" Type="Node" />
+          <Project Name="animation_stuck.csd" Type="Node" />
+          <Image Name="xj_y_hit_01.png" />
+          <Image Name="xj_y_hit_02.png" />
+          <Image Name="xj_y_hit_03.png" />
+          <Image Name="xj_y_hit_04.png" />
+          <Image Name="xj_y_dead_01.png" />
+          <Image Name="xj_y_dead_02.png" />
+          <Project Name="animation_die.csd" Type="Node" />
+        </Folder>
+        <Folder Name="Bubble">
+          <Image Name="bubble_default_01.png" />
+          <Image Name="bubble_default_02.png" />
+          <Image Name="bubble_default_03.png" />
+          <Image Name="bubble_default_04.png" />
+          <Image Name="bubble_default_05.png" />
+          <PlistInfo Name="Bubble.csi" Type="Plist" />
+          <Project Name="BubbleDefault.csd" Type="Node" />
+          <Project Name="WaveRightEnd.csd" Type="Node" />
+          <Image Name="waves_right_end_01.png" />
+          <Image Name="waves_right_end_02.png" />
+          <Image Name="waves_right_end_03.png" />
+          <Image Name="waves_right_end_04.png" />
+          <Image Name="waves_right_end_05.png" />
+          <Image Name="waves_right_end_06.png" />
+          <Image Name="waves_middle_01.png" />
+          <Image Name="waves_middle_02.png" />
+          <Image Name="waves_middle_03.png" />
+          <Image Name="waves_middle_04.png" />
+          <Image Name="waves_middle_05.png" />
+          <Image Name="waves_middle_06.png" />
+          <Project Name="WaveMiddleH.csd" Type="Node" />
+          <Image Name="waves_right_01.png" />
+          <Image Name="waves_right_02.png" />
+          <Image Name="waves_right_03.png" />
+          <Image Name="waves_right_04.png" />
+          <Image Name="waves_right_05.png" />
+          <Image Name="waves_right_06.png" />
+          <Project Name="WaveRight.csd" Type="Node" />
+          <Image Name="waves_top_01.png" />
+          <Image Name="waves_top_02.png" />
+          <Image Name="waves_top_03.png" />
+          <Image Name="waves_top_04.png" />
+          <Image Name="waves_top_05.png" />
+          <Image Name="waves_top_06.png" />
+          <Project Name="WaveTop.csd" Type="Node" />
+          <Image Name="waves_top_end_01.png" />
+          <Image Name="waves_top_end_02.png" />
+          <Image Name="waves_top_end_03.png" />
+          <Image Name="waves_top_end_04.png" />
+          <Image Name="waves_top_end_05.png" />
+          <Image Name="waves_top_end_06.png" />
+          <Project Name="WaveTopEnd.csd" Type="Node" />
+          <Project Name="WaveMiddleV.csd" />
+          <Project Name="WaveBelow.csd" />
+          <Project Name="WaveBelowEnd.csd" />
+          <Project Name="WaveLeft.csd" />
+          <Project Name="WaveLeftEnd.csd" />
+        </Folder>
+      </RootFolder>
+    </Group>
+  </SolutionFolder>
+</Solution>

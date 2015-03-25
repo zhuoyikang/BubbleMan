@@ -10,6 +10,7 @@
 #include "BPlayer.hpp"
 #include "Bubble.hpp"
 #include "BubbleManager.hpp"
+#include "BPlayerManager.hpp"
 
 /**
  * 游戏战斗场景
@@ -71,6 +72,7 @@ private:
      * 泡泡管理
      */
     BubbleManager *_bubbleManager;
+    BPlayerManager * _playerManager;
 
     /**
      * 各种场景元素
