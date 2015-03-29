@@ -1,0 +1,9 @@
+packet_type:1
+name:UserLoginReq
+payload:UserLoginReq
+desc:玩家登陆包
+
+packet_type:2
+name:UserLoginAck
+payload:UserLoginAck
+desc:玩家登陆包

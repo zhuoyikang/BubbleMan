@@ -1,0 +1,2 @@
+一个基于cocos2d-x的炸弹人游戏。
+对应 [[https://github.com/zhuoyikang/golang/tree/master/bubble][服务器]]

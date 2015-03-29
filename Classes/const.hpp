@@ -9,4 +9,15 @@ namespace cocostudio {
 }
 
 
+#ifdef COCOS
+#include "cocos2d.h"
+#define LOG(fmt,args...)  log(fmt,##args)
+USING_NS_CC;
+#else
+#include <stdio.h>
+#define LOG(fmt,args...)  do{ printf(fmt "\n",##args);fflush(stdout);} while(0)
+#endif
+
+
+
 #endif
