@@ -11,13 +11,12 @@
 
 #include <stdio.h>
 #include "SockNet.hpp"
-#include "MsgGen.hpp"
-#include "MsgDispatch.hpp"
 
-class BubbleApp
+class BubbleApp:public SockApp
 {
 public:
     BubbleApp();
+    void Dispatch(unsigned char *buff);
     void Run();
 
     SockNet sockNet;

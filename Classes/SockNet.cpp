@@ -70,22 +70,16 @@ int SockNet::Connect(const char *host, int)
     pin.sin_addr.s_addr=((struct in_addr *)(nlp_host->h_addr))->s_addr;
     pin.sin_port=htons(8080);
 
-    this->Sock = socket(AF_INET,SOCK_STREAM,0);
+    this->s = socket(AF_INET,SOCK_STREAM,0);
 
-    if(this->Sock == -1){
-        LOG("failed to socket %d", this->Sock);
+    if(this->s == -1){
+        LOG("failed to socket %d", this->s);
         return -1;
     }
-    /*
-    int sockopt=1;
-    if(setsockopt(this->Sock, SOL_SOCKET, SO_USELOOPBACK, (char*)&sockopt, sizeof(sockopt)))
-        LOG("error on setsockopt SO_USELOOPBACK: %s", strerror(errno));
-    */
 
-    msgbin::show_byte(&pin, sizeof(pin));
 
-    if(connect(this->Sock,(struct sockaddr*)&pin,sizeof(pin)) == -1){
-        LOG("failed to connected %d", this->Sock);
+    if(connect(this->s,(struct sockaddr*)&pin,sizeof(pin)) == -1){
+        LOG("failed to connected %d", this->s);
         return -1;
     } else {
         LOG("successes to connected");
@@ -101,7 +95,7 @@ typedef int int32_t;
 typedef unsigned int uint32_t;
 
 
-void show_byte(void *buff, size_t size)
+void SockNet::ShowByte(void *buff, size_t size)
 {
     char *buffer=(char *)buff;
     LOG("show: ");
@@ -126,7 +120,7 @@ void* _sockNetwork(void *p)
         unsigned short size = (buff[0]<< 8 | buff[1]);
         //读取整个包size字节.
         ret = sock->Readn(sock->rb, size-2);
-        show_byte(buff, size-2);
+        SockNet::ShowByte(buff, size-2);
         sock->d->Dispatch(buff);
     }
     return NULL;
@@ -143,8 +137,8 @@ int SockNet::SendBytes(void *vptr, size_t n)
     ptr = (const char *)vptr;
     nleft = n;
     while (nleft > 0) {
-        LOG("send %d", this->Sock);
-        if ((nwritten = send(this->Sock, ptr, nleft,0)) <= 0) {
+        LOG("send %d", this->s);
+        if ((nwritten = send(this->s, ptr, nleft,0)) <= 0) {
             if (nwritten < 0 && errno == EINTR)
                 nwritten = 0;   /* and call write() again */
             else
@@ -165,7 +159,7 @@ int SockNet::Readn(void* vptr, size_t n)
     ptr = (char*)vptr;
     nleft = n;
     while (nleft > 0) {
-        if ((nread = recv(this->Sock, ptr, nleft,0)) < 0) {
+        if ((nread = recv(this->s, ptr, nleft,0)) < 0) {
             if (errno == EINTR) {
                 nread=0;
             } else {
@@ -194,8 +188,7 @@ int SockNet::Work()
 }
 
 
-
-#ifndef COCOS
+#ifdef SELF_MAIN
 
 int main(int, char *[])
 {

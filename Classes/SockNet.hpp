@@ -38,7 +38,7 @@ public:
     friend void* _sockNetwork(void *p);
 
 private:
-    int Sock;
+    int s;
     void *rb;
     void *wb;
     SockApp *d;

@@ -12,9 +12,15 @@
 BubbleApp::BubbleApp()
 {
     //初始化网络部分.
-    auto sockDispatch = new(SockBubbleDispatch);
-    sockNet.Init(sockDispatch);
+    sockNet.Init(self);
+    sock.Connect("127.0.0.1", 8080);
+    sock.Work();
 }
 
-void BubbleApp::Run(){
+void BubbleApp::Run() {
+}
+
+
+void BubbleApp::Dispatch(unsigned char *buff)
+{
 }
