@@ -1,12 +1,6 @@
-#用来测试的参数
-ClientInfo=
-udid string
-===
-
 #用户登陆发送包.
 UserLoginReq=
 udid string
-client ClientInfo
 ===
 
 # 登陆回复包
@@ -14,5 +8,26 @@ UserLoginAck=
 udid string
 name string
 level int32
-client ClientInfo
+===
+
+#用户加入房间发送包.
+UserJoinReq=
+udid string
+===
+
+#加入房间回复包
+UserJoinAck=
+udid string
+name string
+level int32
+===
+
+#房间建立ntf
+RoomReadyNtf=
+t int
+===
+
+#房间关闭.
+RoomCloseNtf=
+t int
 ===

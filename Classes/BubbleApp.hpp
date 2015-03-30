@@ -18,9 +18,6 @@ public:
     BubbleApp();
     void Dispatch(unsigned char *buff);
     void Run();
-
-    SockNet sockNet;
 };
-
 
 #endif /* defined(__T4__BubbleApp__) */

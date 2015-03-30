@@ -5,7 +5,7 @@ msgbin:
 socknet:
 	cp /Users/zhuoyikang/bubble_go/src/bubble/*.txt ./
 	./proto_t.awk  proto.txt
-	g++ -DSELF_MAIN -o SockNet SockNet.cpp MsgBin.cpp MsgGen.cpp ; ./SockNet
+	g++ -DSELF_BUBBLE_MAIN -o BubbleApp BubbleApp.cpp SockNet.cpp MsgBin.cpp MsgGen.cpp ; ./BubbleApp
 
 run:
 	./SockNet

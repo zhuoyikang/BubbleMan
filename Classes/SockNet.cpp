@@ -1,11 +1,10 @@
 //
-//  SockNet.cpp
+//  SockApp.cpp
 //  TileTest
 //
 //  Created by zhuoyikang on 15-2-12.
 //
 //
-
 
 
 #include <sys/socket.h>
@@ -27,31 +26,26 @@
 #include "MsgBin.hpp"
 #include "MsgGen.hpp"
 
-#define BUFF_SIZE 1 << 16
+#define BUFF_SIZE (1 << 16)
 
 
-SockNet::SockNet() {}
-
-SockNet::~SockNet() {}
-
-SockNet::SockNet(SockApp * dis)
+SockApp::SockApp()
 {
-    Init(dis);
+    this->Rbh = (unsigned char *)malloc(4+BUFF_SIZE);
+    assert(this->Rbh!=NULL);
+
+    this->Wbh = (unsigned char *)malloc(4+BUFF_SIZE);
+    assert(this->Wbh!=NULL);
+
+    this->Rb = this->Rbh+4;
+    this->Wb = this->Wbh+4;
 }
 
-void SockNet::Init(SockApp * dis)
-{
-    this->rb = malloc(BUFF_SIZE);
-    assert(this->rb!=NULL);
+SockApp::~SockApp() {}
 
-    this->wb = malloc(BUFF_SIZE);
-    assert(this->wb!=NULL);
-
-    d = dis;
-}
 
 // 尝试连接服务器.
-int SockNet::Connect(const char *host, int)
+int SockApp::Connect(const char *host, int port)
 {
     struct sockaddr_in pin;
 
@@ -68,7 +62,7 @@ int SockNet::Connect(const char *host, int)
     pin.sin_family=AF_INET;                 //AF_INET表示使用IPv4
     pin.sin_addr.s_addr=htonl(INADDR_ANY);
     pin.sin_addr.s_addr=((struct in_addr *)(nlp_host->h_addr))->s_addr;
-    pin.sin_port=htons(8080);
+    pin.sin_port=htons(port);
 
     this->s = socket(AF_INET,SOCK_STREAM,0);
 
@@ -76,7 +70,6 @@ int SockNet::Connect(const char *host, int)
         LOG("failed to socket %d", this->s);
         return -1;
     }
-
 
     if(connect(this->s,(struct sockaddr*)&pin,sizeof(pin)) == -1){
         LOG("failed to connected %d", this->s);
@@ -88,56 +81,53 @@ int SockNet::Connect(const char *host, int)
 }
 
 
-typedef unsigned char byte_t;
-typedef unsigned short ushort_t;
-typedef short short_t;
-typedef int int32_t;
-typedef unsigned int uint32_t;
 
-
-void SockNet::ShowByte(void *buff, size_t size)
+void SockApp::ShowByte(void *buff, size_t size)
 {
     char *buffer=(char *)buff;
     LOG("show: ");
     for(size_t i =0 ; i< size ;i++) {
-        printf("%x ", (byte_t)buffer[i]);
+        printf("%x ", (unsigned char)buffer[i]);
     }
     LOG("\n");
-}
 
+}
 
 void* _sockNetwork(void *p)
 {
-    SockNet *sock = (SockNet*)p;
+    SockApp *sock = (SockApp*)p;
     int ret;
     while(1) {
-        ret = sock->Readn(sock->rb, 2);
+        ret = sock->Readn(sock->Rb, 2);
         if(ret < 0) {
             LOG("continue %d\n", ret);
             return NULL;
         }
-        unsigned char *buff = (unsigned char*)sock->rb;
+        unsigned char *buff = (unsigned char*)sock->Rb;
         unsigned short size = (buff[0]<< 8 | buff[1]);
         //读取整个包size字节.
-        ret = sock->Readn(sock->rb, size-2);
-        SockNet::ShowByte(buff, size-2);
-        sock->d->Dispatch(buff);
+        ret = sock->Readn(sock->Rb, size-2);
+        SockApp::ShowByte(buff, size-2);
+        sock->Dispatch(buff);
     }
     return NULL;
 }
 
 
 // 向服务器发送字节
-int SockNet::SendBytes(void *vptr, size_t n)
+int SockApp::SendBytes(void *vptr, size_t n)
 {
     size_t nleft;
     ssize_t nwritten;
     const char *ptr;
 
     ptr = (const char *)vptr;
+
+    // 注释我吧
+    ShowByte((void*)ptr, n);
+
     nleft = n;
     while (nleft > 0) {
-        LOG("send %d", this->s);
         if ((nwritten = send(this->s, ptr, nleft,0)) <= 0) {
             if (nwritten < 0 && errno == EINTR)
                 nwritten = 0;   /* and call write() again */
@@ -150,7 +140,7 @@ int SockNet::SendBytes(void *vptr, size_t n)
     return (n);
 }
 
-int SockNet::Readn(void* vptr, size_t n)
+int SockApp::Readn(void* vptr, size_t n)
 {
     size_t  nleft;
     ssize_t nread;
@@ -178,7 +168,7 @@ int SockNet::Readn(void* vptr, size_t n)
     }
 }
 
-int SockNet::Work()
+int SockApp::Work()
 {
     int n;
     if ((n=pthread_create(&this->p, NULL, _sockNetwork, this))!=0) {
@@ -187,13 +177,36 @@ int SockNet::Work()
     return 0;
 }
 
+//设置API类型.
+void SockApp::WriteAPI(unsigned short t, unsigned short len)
+{
+    len+=4;
+    unsigned char *p = this->Wbh;
+    msgbin::BzWriteuint16(&p, &len);
+    msgbin::BzWriteuint16(&p, &t);
+}
+
 
 #ifdef SELF_MAIN
 
+
+class SockAppDemo: public SockApp
+{
+public:
+    void Dispatch(unsigned char *buff) ;
+};
+
+void SockAppDemo::Dispatch(unsigned char *buff)
+{
+    unsigned short api;
+    msgbin::BzReaduint16(&buff, &api);
+    LOG("type %d", api);
+}
+
 int main(int, char *[])
 {
-    SockNet sock;
-    sock.Connect("127.0.0.1", 8080);
+    SockApp sock();
+    sock.Connect("127.0.0.1", 3004);
     sock.Work();
     sleep(120);
 }

@@ -10,15 +10,9 @@
 namespace msgbin
 {
 
-	struct ClientInfo
-	{
-		string udid;
-	};
-
 	struct UserLoginReq
 	{
 		string udid;
-		ClientInfo client;
 	};
 
 	struct UserLoginAck
@@ -26,17 +20,47 @@ namespace msgbin
 		string udid;
 		string name;
 		int32 level;
-		ClientInfo client;
 	};
 
-	int BzReadClientInfo(byte_t **pbyte, ClientInfo *ret);
-	int BzWriteClientInfo(byte_t **pbyte, ClientInfo *ret);
+	struct UserJoinReq
+	{
+		string udid;
+	};
+
+	struct UserJoinAck
+	{
+		string udid;
+		string name;
+		int32 level;
+	};
+
+	struct RoomReadyNtf
+	{
+		int32 t;
+	};
+
+	struct RoomCloseNtf
+	{
+		int32 t;
+	};
 
 	int BzReadUserLoginReq(byte_t **pbyte, UserLoginReq *ret);
 	int BzWriteUserLoginReq(byte_t **pbyte, UserLoginReq *ret);
 
 	int BzReadUserLoginAck(byte_t **pbyte, UserLoginAck *ret);
 	int BzWriteUserLoginAck(byte_t **pbyte, UserLoginAck *ret);
+
+	int BzReadUserJoinReq(byte_t **pbyte, UserJoinReq *ret);
+	int BzWriteUserJoinReq(byte_t **pbyte, UserJoinReq *ret);
+
+	int BzReadUserJoinAck(byte_t **pbyte, UserJoinAck *ret);
+	int BzWriteUserJoinAck(byte_t **pbyte, UserJoinAck *ret);
+
+	int BzReadRoomReadyNtf(byte_t **pbyte, RoomReadyNtf *ret);
+	int BzWriteRoomReadyNtf(byte_t **pbyte, RoomReadyNtf *ret);
+
+	int BzReadRoomCloseNtf(byte_t **pbyte, RoomCloseNtf *ret);
+	int BzWriteRoomCloseNtf(byte_t **pbyte, RoomCloseNtf *ret);
 
 }
 
