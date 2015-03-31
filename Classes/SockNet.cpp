@@ -19,7 +19,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <errno.h>
-#include <string>
 
 #include "const.hpp"
 #include "SockNet.hpp"
@@ -82,10 +81,10 @@ int SockApp::Connect(const char *host, int port)
 
 
 
-void SockApp::ShowByte(void *buff, size_t size)
+void SockApp::ShowByte(string title, void *buff, size_t size)
 {
     char *buffer=(char *)buff;
-    LOG("show: ");
+    LOG("%s show: ", title.c_str());
     for(size_t i =0 ; i< size ;i++) {
         printf("%x ", (unsigned char)buffer[i]);
     }
@@ -97,18 +96,23 @@ void* _sockNetwork(void *p)
 {
     SockApp *sock = (SockApp*)p;
     int ret;
+    unsigned short api;
     while(1) {
-        ret = sock->Readn(sock->Rb, 2);
+        ret = sock->Readn(sock->Rbh, 2);
         if(ret < 0) {
             LOG("continue %d\n", ret);
             return NULL;
         }
-        unsigned char *buff = (unsigned char*)sock->Rb;
+        unsigned char *buff = (unsigned char*)sock->Rbh;
         unsigned short size = (buff[0]<< 8 | buff[1]);
+        buff = sock->Rbh+2;
         //读取整个包size字节.
-        ret = sock->Readn(sock->Rb, size-2);
-        SockApp::ShowByte(buff, size-2);
-        sock->Dispatch(buff);
+        ret = sock->Readn(buff, size-2);
+        msgbin::BzReaduint16(&buff, &api);
+        SockApp::ShowByte("Read",buff, size-4);
+
+        //sleep(1);
+        sock->Dispatch(api,buff,size-4);
     }
     return NULL;
 }
@@ -124,7 +128,7 @@ int SockApp::SendBytes(void *vptr, size_t n)
     ptr = (const char *)vptr;
 
     // 注释我吧
-    ShowByte((void*)ptr, n);
+    ShowByte("Send",(void*)ptr, n);
 
     nleft = n;
     while (nleft > 0) {
@@ -193,13 +197,11 @@ void SockApp::WriteAPI(unsigned short t, unsigned short len)
 class SockAppDemo: public SockApp
 {
 public:
-    void Dispatch(unsigned char *buff) ;
+    void Dispatch(int t, unsigned char *buff,int);
 };
 
-void SockAppDemo::Dispatch(unsigned char *buff)
+void SockAppDemo::Dispatch(int api,unsigned char *buff,int)
 {
-    unsigned short api;
-    msgbin::BzReaduint16(&buff, &api);
     LOG("type %d", api);
 }
 

@@ -12,34 +12,34 @@
 #include <stdio.h>
 #include <iostream>
 #include <pthread.h>
+#include <queue>
 
 using namespace std;
 
 
-//用于多线程通信.
-class BombMsg
+class QueueMsg
 {
 public:
-    int type;
-    void *data;
-    void init(void *data ,int size);
-    void destroy();
+    virtual ~QueueMsg() =0;
+    virtual int T() = 0;  //类型
+    virtual void *D() = 0;  //数据
 };
+
 
 class MsgQueue
 {
 public:
     MsgQueue();
-    bool empty() const;
-    BombMsg front();
-    void pop();
-    void push(const BombMsg msg);
-    void lock();
-    void unlock();
+    bool Empty() const;
+    QueueMsg* Front();
+    void Pop();
+    void Push(QueueMsg* msg);
+    void Lock();
+    void Unlock();
 
 private:
     pthread_mutex_t mutex;
-    queue<BombMsg> qs;
+    queue<QueueMsg*> qs;
 };
 
 #endif /* defined(__T1__MsgQueue__) */

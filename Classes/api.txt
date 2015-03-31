@@ -8,7 +8,6 @@ name:UserLoginAck
 payload:UserLoginAck
 desc:玩家登陆包
 
-
 packet_type:3
 name:UserJoinReq
 payload:UserJoinReq
@@ -19,12 +18,10 @@ name:UserJoinAck
 payload:UserJoinAck
 desc:玩家登陆包
 
-
 packet_type:5
-name:UserJoinNtf
-payload:UserJoinNtf
+name:RoomReadyNtf
+payload:RoomReadyNtf
 desc:玩家登陆包
-
 
 packet_type:6
 name:RoomCloseNtf

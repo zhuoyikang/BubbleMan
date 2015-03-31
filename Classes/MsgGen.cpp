@@ -51,14 +51,51 @@ int BzWriteUserJoinAck(byte_t **pbyte, UserJoinAck *ret)
 	BzWriteint32(pbyte, &ret->level);
 	return 0;
 }
+int BzReadBVector2(byte_t **pbyte, BVector2 *ret)
+{
+	BzReadint32(pbyte, &ret->x);
+	BzReadint32(pbyte, &ret->y);
+	return 0;
+}
+int BzWriteBVector2(byte_t **pbyte, BVector2 *ret)
+{
+	BzWriteint32(pbyte, &ret->x);
+	BzWriteint32(pbyte, &ret->y);
+	return 0;
+}
+int BzReadRoomUser(byte_t **pbyte, RoomUser *ret)
+{
+	BzReadBVector2(pbyte, &ret->pos);
+	return 0;
+}
+int BzWriteRoomUser(byte_t **pbyte, RoomUser *ret)
+{
+	BzWriteBVector2(pbyte, &ret->pos);
+	return 0;
+}
 int BzReadRoomReadyNtf(byte_t **pbyte, RoomReadyNtf *ret)
 {
-	BzReadint32(pbyte, &ret->t);
+	BzReadint32(pbyte, &ret->roomId);
+	uint16 uPosAll_size;
+	BzReaduint16(pbyte,&uPosAll_size);
+	for(uint16 i=0; i<uPosAll_size; i++ ) {
+		RoomUser val;
+		BzReadRoomUser(pbyte, &val);
+		ret->uPosAll.push_back(val);
+	}
+	BzReadint32(pbyte, &ret->uIdx);
 	return 0;
 }
 int BzWriteRoomReadyNtf(byte_t **pbyte, RoomReadyNtf *ret)
 {
-	BzWriteint32(pbyte, &ret->t);
+	BzWriteint32(pbyte, &ret->roomId);
+	uint16 uPosAll_size=ret->uPosAll.size();
+	BzWriteuint16(pbyte,&uPosAll_size);
+	for(uint16 i=0; i<uPosAll_size; i++ ) {
+		RoomUser val = ret->uPosAll.at(i);
+		BzWriteRoomUser(pbyte, &val);
+	}
+	BzWriteint32(pbyte, &ret->uIdx);
 	return 0;
 }
 int BzReadRoomCloseNtf(byte_t **pbyte, RoomCloseNtf *ret)

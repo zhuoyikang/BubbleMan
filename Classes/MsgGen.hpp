@@ -34,9 +34,22 @@ namespace msgbin
 		int32 level;
 	};
 
+	struct BVector2
+	{
+		int32 x;
+		int32 y;
+	};
+
+	struct RoomUser
+	{
+		BVector2 pos;
+	};
+
 	struct RoomReadyNtf
 	{
-		int32 t;
+		int32 roomId;
+		vector<RoomUser> uPosAll;
+		int32 uIdx;
 	};
 
 	struct RoomCloseNtf
@@ -55,6 +68,12 @@ namespace msgbin
 
 	int BzReadUserJoinAck(byte_t **pbyte, UserJoinAck *ret);
 	int BzWriteUserJoinAck(byte_t **pbyte, UserJoinAck *ret);
+
+	int BzReadBVector2(byte_t **pbyte, BVector2 *ret);
+	int BzWriteBVector2(byte_t **pbyte, BVector2 *ret);
+
+	int BzReadRoomUser(byte_t **pbyte, RoomUser *ret);
+	int BzWriteRoomUser(byte_t **pbyte, RoomUser *ret);
 
 	int BzReadRoomReadyNtf(byte_t **pbyte, RoomReadyNtf *ret);
 	int BzWriteRoomReadyNtf(byte_t **pbyte, RoomReadyNtf *ret);

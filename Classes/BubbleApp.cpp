@@ -24,11 +24,26 @@ void BubbleApp::Run() {
 }
 
 
-void BubbleApp::Dispatch(unsigned char *p)
+void BubbleApp::Dispatch(int api, unsigned char *p, int size)
 {
-    unsigned short api;
-    msgbin::BzReaduint16(&p, &api);
-    LOG("type %d", api);
+    LOG("bubble api type %d", api);
+    QueueMsg *msg = new SockNetMsg(api, p, size);
+    mq.Push(msg);
+}
+
+void BubbleApp::Loop()
+{
+    while(1) {
+        sleep(1);
+
+        if(mq.Empty()==true){
+            continue;
+        }
+        QueueMsg *msg = mq.Front();
+        mq.Pop();
+        LOG("t1 %d", msg->T());
+        delete msg; // 用完删除.
+    }
 }
 
 #ifdef SELF_BUBBLE_MAIN
@@ -66,7 +81,8 @@ int main(int, char *[])
     app.WriteAPI(3, b1-b2);
     app.SendBytes(app.Wbh, b1-b2+4);
 
-    sleep(120);
+    app.Loop();
+
 }
 
 #endif

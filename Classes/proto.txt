@@ -22,9 +22,24 @@ name string
 level int32
 ===
 
-#房间建立ntf
+#位置
+BVector2=
+x int
+y int
+===
+
+# 地图玩家信息
+RoomUser=
+pos BVector2
+===
+
+# 房间建立ntf
+# uPosAll:地图上所有玩家所在位置
+# uIdx:我在数据中的下标.
 RoomReadyNtf=
-t int
+roomId int
+uPosAll array RoomUser
+uIdx int
 ===
 
 #房间关闭.

@@ -6,21 +6,13 @@
 //
 //
 
-#include "MsgQueue.h"
+#include "MsgQueue.hpp"
 #include <assert.h>
 
-void BombMsg::init(void *data_in ,int size)
-{
-    data = malloc(size);
-    assert(data != NULL);
-    memcpy(data, data_in, size);
-}
 
-void BombMsg::destroy()
-{
-    free(this->data);
-}
 
+QueueMsg::~QueueMsg(){
+}
 
 
 MsgQueue::MsgQueue()
@@ -29,37 +21,37 @@ MsgQueue::MsgQueue()
     assert(ret==0);
 }
 
-bool MsgQueue::empty() const
+bool MsgQueue::Empty() const
 {
     bool ret;
     ret = this->qs.empty();
     return ret;
 }
-BombMsg MsgQueue::front()
+
+QueueMsg* MsgQueue::Front()
 {
-    BombMsg msg;
+    QueueMsg* msg;
     msg =  this->qs.front();
     return msg;
 }
 
-void MsgQueue::pop()
+void MsgQueue::Pop()
 {
     this->qs.pop();
 }
 
-void MsgQueue::push(const BombMsg msg)
+void MsgQueue::Push(QueueMsg* msg)
 {
     this->qs.push(msg);
 }
 
-void MsgQueue::lock()
+void MsgQueue::Lock()
 {
     pthread_mutex_lock(&this->mutex);
 }
 
-void MsgQueue::unlock()
+void MsgQueue::Unlock()
 {
     pthread_mutex_unlock(&this->mutex);
-
 }
 
