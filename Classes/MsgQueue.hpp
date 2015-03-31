@@ -30,12 +30,9 @@ class MsgQueue
 {
 public:
     MsgQueue();
-    bool Empty() const;
-    QueueMsg* Front();
-    void Pop();
+
+    QueueMsg* Pick();
     void Push(QueueMsg* msg);
-    void Lock();
-    void Unlock();
 
 private:
     pthread_mutex_t mutex;

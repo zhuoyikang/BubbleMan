@@ -52,13 +52,13 @@ void BubbleManager::Explose(int id)
 void BubbleManager::update(float)
 {
     int now=BTime::GetCurrentUtcSecond();
-    log("BubbleManager::update %d",now);
+    //log("BubbleManager::update %d",now);
     cocos2d::Vector<Bubble*> deleteList;
     for(cocos2d::Vector<Bubble*>::iterator iter=_bubbleList.begin();
         iter!=_bubbleList.end(); ) {
         if((*iter)->UpdateStatus(now) == bubble_sts_end){
             this->removeChild(*iter);
-            log("delete");
+            //log("delete");
             iter=_bubbleList.erase(iter);
         }else{
             iter++;

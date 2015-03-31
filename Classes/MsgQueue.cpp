@@ -21,37 +21,21 @@ MsgQueue::MsgQueue()
     assert(ret==0);
 }
 
-bool MsgQueue::Empty() const
+QueueMsg* MsgQueue::Pick()
 {
-    bool ret;
-    ret = this->qs.empty();
-    return ret;
-}
-
-QueueMsg* MsgQueue::Front()
-{
-    QueueMsg* msg;
-    msg =  this->qs.front();
+    QueueMsg* msg = NULL;
+    pthread_mutex_lock(&this->mutex);
+    if( ! this->qs.empty() ) {
+        msg = this->qs.front();
+        this->qs.pop();
+    }
+    pthread_mutex_unlock(&this->mutex);
     return msg;
-}
-
-void MsgQueue::Pop()
-{
-    this->qs.pop();
 }
 
 void MsgQueue::Push(QueueMsg* msg)
 {
-    this->qs.push(msg);
-}
-
-void MsgQueue::Lock()
-{
     pthread_mutex_lock(&this->mutex);
-}
-
-void MsgQueue::Unlock()
-{
+    this->qs.push(msg);
     pthread_mutex_unlock(&this->mutex);
 }
-

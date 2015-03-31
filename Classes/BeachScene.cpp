@@ -1,4 +1,5 @@
 #include "BeachScene.hpp"
+#include "BubbleApp.hpp"
 
 USING_NS_CC;
 
@@ -68,6 +69,9 @@ bool BeachScene::init()
 
     _playerManager=BPlayerManager::create();
     addChild(_playerManager);
+
+
+    HandlerMap[6] = &BeachScene::RoomCloseNtf;
 
     return true;
 }
@@ -150,8 +154,8 @@ bool BeachScene::doesPositionBlock(Point position,int direct)
     }
 
     Point tileCoord=this->tileCoordForPosition(position);
-    log("xx tile x %f y %f positon %f %f", tileCoord.x,tileCoord.y,
-        position.x, position.y);
+    //log("xx tile x %f y %f positon %f %f", tileCoord.x,tileCoord.y,
+    //    position.x, position.y);
     int tiledGid=_meta->getTileGIDAt(tileCoord);
     if (tiledGid) {
         auto properties=_tileMap->getPropertiesForGID(tiledGid).asValueMap();
@@ -175,13 +179,15 @@ void BeachScene::update(float)
     if(!doesPositionBlock(pos,direct)) {
         _playerSprite->setPosition(pos);
     }
+
+    loopMsg();
 }
 
 void BeachScene::onTouchEnded(Touch *touch, Event *)
 {
     auto touchLocation=touch->getLocation();
     auto position=_playerSprite->getPosition();
-    //log("current position x %f y %f", touchLocation.x, touchLocation.y);
+    ////log("current position x %f y %f", touchLocation.x, touchLocation.y);
     _bubbleManager->MakeBubble(3,position);
 
     Point tileCoord=this->tileCoordForPosition(touchLocation);
@@ -201,15 +207,15 @@ Point BeachScene::tileCoordForPosition(Point position)
     y=MIN(MAX(0, y), _tileMap->getMapSize().height-1);
     x=MIN(MAX(0, x), _tileMap->getMapSize().width-1);
 
-    log("tileCoordForPosition point x %d y %d %f %f", x, y,
-        _tileMap->getMapSize().width, _tileMap->getMapSize().height);
+    //log("tileCoordForPosition point x %d y %d %f %f", x, y,
+    //    _tileMap->getMapSize().width, _tileMap->getMapSize().height);
     return Point(x, y);
 }
 
 
 void BeachScene::tileExpolsed(Point tileCoord)
 {
-    log("expose x %f y %f", tileCoord.x, tileCoord.y);
+    //log("expose x %f y %f", tileCoord.x, tileCoord.y);
     int tiledGid = _meta->getTileGIDAt(tileCoord);
     if(tiledGid==0) {
         return;
@@ -220,6 +226,30 @@ void BeachScene::tileExpolsed(Point tileCoord)
         if ("True" == collectable) {
             _meta->removeTileAt(tileCoord);
             _foreground->removeTileAt(tileCoord);
+        }
+    }
+}
+
+
+void BeachScene::RoomCloseNtf(QueueMsg *msg)
+{
+    if( gBubbleApp.Status == BUBBLE_APP_STS_FIGHT ){
+        gBubbleApp.Status=BUBBLE_APP_STS_SUCCESS;
+        gBubbleApp.SceneSuccess();
+        gBubbleApp.Join();
+    }
+    LOG("RoomCloseNtf");
+}
+
+
+void BeachScene::loopMsg()
+{
+    QueueMsg *msg;
+    while (( msg = gBubbleApp.Mq.Pick()) ) {
+        LOG("msg tt %d", msg->T());
+        BeachSceneFptr h = this->HandlerMap[msg->T()];
+        if (h!=NULL) {
+            (this->*h)(msg);
         }
     }
 }

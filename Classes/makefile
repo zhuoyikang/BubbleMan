@@ -8,7 +8,7 @@ socknet:
 	g++ -DSELF_BUBBLE_MAIN -o BubbleApp BubbleApp.cpp SockNet.cpp MsgBin.cpp MsgGen.cpp MsgQueue.cpp ; ./BubbleApp
 
 run:
-	./SockNet
+	./BubbleApp
 
 g:
 	./proto_t.awk  proto.txt

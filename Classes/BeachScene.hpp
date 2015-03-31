@@ -12,11 +12,15 @@
 #include "BubbleManager.hpp"
 #include "BPlayerManager.hpp"
 
+class QueueMsg;
+
 /**
  * 游戏战斗场景
  */
 class BeachScene : public cocos2d::Layer
 {
+    typedef void (BeachScene::*BeachSceneFptr)(QueueMsg *m);
+
 public:
     static cocos2d::Scene* createScene();
     virtual bool init();
@@ -54,7 +58,12 @@ public:
 
     CREATE_FUNC(BeachScene);
 
+
+public:
+    void RoomCloseNtf(QueueMsg *msg);
+
 private:
+    void loopMsg();
 
     /**
      * 设置视点
@@ -92,6 +101,9 @@ private:
      * 玩家
      */
     BPlayer *_playerSprite;
+
+
+    BeachSceneFptr HandlerMap[100];
 };
 
 #endif
