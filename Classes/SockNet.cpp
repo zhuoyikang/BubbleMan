@@ -71,7 +71,7 @@ int SockApp::Connect(const char *host, int port)
     }
 
     if(connect(this->s,(struct sockaddr*)&pin,sizeof(pin)) == -1){
-        LOG("failed to connected %d", this->s);
+        LOG("failed to connected %d %s", this->s, host);
         return -1;
     } else {
         LOG("successes to connected");

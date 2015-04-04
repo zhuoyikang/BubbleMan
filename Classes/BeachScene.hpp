@@ -11,6 +11,8 @@
 #include "Bubble.hpp"
 #include "BubbleManager.hpp"
 #include "BPlayerManager.hpp"
+#include "MsgGen.hpp"
+
 
 class QueueMsg;
 
@@ -24,6 +26,9 @@ class BeachScene : public cocos2d::Layer
 public:
     static cocos2d::Scene* createScene();
     virtual bool init();
+
+
+    int rockerToStatus(int d);
 
     /**
      * 定时器刷新
@@ -49,6 +54,7 @@ public:
      * 根据位置计算tile坐标.
      */
     Point tileCoordForPosition(cocos2d::Point position);
+    Point positionForTileCoord(cocos2d::Point position);
 
     /**
      * 设置某个瓦片被泡泡炸毁
@@ -58,9 +64,16 @@ public:
 
     CREATE_FUNC(BeachScene);
 
-
 public:
+    /**
+     * 服务器消息处理函数
+     */
     void RoomCloseNtf(QueueMsg *msg);
+
+    /**
+     * 设置玩家的位置.
+     */
+    void RoomUserChgNtf(QueueMsg *msg);
 
 private:
     void loopMsg();
@@ -70,10 +83,25 @@ private:
      */
     void setViewPointCenter(cocos2d::Point position);
 
+
     /**
-     * 设置玩家的位置
+     * 设置主角的位置
      */
-    void setPlayerPosition(cocos2d::Point position);
+    void updateMainPlayerStatus(int d);
+    void setMainPlayerPosition(cocos2d::Point position);
+    void setMainPlayerStatus(int d);
+
+    /**
+     * 同步主角信息到服务器.
+     */
+    void syncMainPlayerInfo(cocos2d::Point pos, int d);
+
+
+    /**
+     * 初始化所有的玩家.
+     */
+    void initAllPlayer();
+    void updateAllPlayer();
 
 private:
 
@@ -100,7 +128,7 @@ private:
     /**
      * 玩家
      */
-    BPlayer *_playerSprite;
+    //BPlayer *_playerSprite;
 
 
     BeachSceneFptr HandlerMap[100];

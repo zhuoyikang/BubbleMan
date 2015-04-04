@@ -6,14 +6,12 @@
 
 namespace msgbin
 {
+    typedef unsigned char* bytes;
     typedef unsigned char byte_t;
     typedef unsigned short uint16;
     typedef short int16;
     typedef int int32;
     typedef unsigned int uint32;
-
-#define string std::string
-#define vector std::vector
 
     //测试函数
     void bz_test_u16();
@@ -40,8 +38,8 @@ namespace msgbin
     int BzWriteuint32(byte_t **pbyte, uint32 *i32);
 
     //字符串
-    int BzReadstring(byte_t **pbyte, string *str);
-    int BzWritestring(byte_t **pbyte, string *str);
+    int BzReadstring(byte_t **pbyte, std::string *str);
+    int BzWritestring(byte_t **pbyte, std::string *str);
 
 }
 

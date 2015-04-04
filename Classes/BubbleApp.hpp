@@ -57,7 +57,5 @@ public:
 };
 
 
-// Sorrry，全局变量
-extern BubbleApp gBubbleApp;
 
 #endif /* defined(__T4__BubbleApp__) */

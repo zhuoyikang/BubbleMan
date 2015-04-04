@@ -14,20 +14,21 @@
 /**
  * 玩家三种状态
  */
-enum {
-    player_sts_free,
-    player_sts_stuck,
-    player_sts_die
-};
+// enum {
+//     player_sts_free,
+//     player_sts_stuck,
+//     player_sts_die
+// };
 
 
 enum {
-    animation_left = 0,
-    animation_right = 1,
-    animation_back = 2,
-    animation_front = 3,
-    animation_stuck = 4,
-    animation_die = 5,
+    animation_free = 0,
+    animation_left = 1,
+    animation_right = 2,
+    animation_back = 3,
+    animation_front = 4,
+    animation_stuck = 5,
+    animation_die = 6,
     animation_max
 };
 
@@ -41,9 +42,8 @@ public:
     /**
      * 设置玩家的方向.
      */
-    void SetAnimation(int direction);
-
-    void SetDirection(int direction);
+    // void SetAnimation(int direction);
+    // void SetDirection(int direction);
 
     /**
      * 设置玩家状态
@@ -51,14 +51,16 @@ public:
     void SetStatus(int status);
 
     /**
+     * 返回玩家当前状态
+     */
+    int GetStatus();
+
+
+    /**
      * 设置玩家的位置
      */
     void setPosition(const cocos2d::Vec2& position);
 
-    /**
-     * 返回玩家当前位置
-     */
-    int CurrentDirection();
 
     /**
      * 获取玩家当前的id
@@ -72,7 +74,7 @@ private:
      * 玩家状态
      */
     int _status;
-    int _currentDirection;
+    //int _currentStatus;
     cocostudio::timeline::ActionTimeline* _animationActions[animation_max];
     cocos2d::Node * _animationNodes[animation_max];
 };

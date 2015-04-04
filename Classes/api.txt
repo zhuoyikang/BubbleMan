@@ -27,3 +27,8 @@ packet_type:6
 name:RoomCloseNtf
 payload:RoomCloseNtf
 desc:玩家登陆包
+
+packet_type:7
+name:RoomUserChg
+payload:RoomUserChg
+desc:房间里的玩家信息包，实时变化.

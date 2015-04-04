@@ -31,6 +31,8 @@ y int
 # 地图玩家信息
 RoomUser=
 pos BVector2
+direction int
+status int
 ===
 
 # 房间建立ntf
@@ -45,4 +47,10 @@ uIdx int
 #房间关闭.
 RoomCloseNtf=
 t int
+===
+
+#玩家信息包，实时变化.
+RoomUserChg=
+uid int
+user RoomUser
 ===

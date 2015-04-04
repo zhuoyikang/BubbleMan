@@ -78,7 +78,7 @@ void BubbleApp::Loop()
         sleep(1);
 
         if(Mq.Empty()==true){
-            continue;
+        continue;
         }
         QueueMsg *msg = Mq.Front();
         Mq.Pop();

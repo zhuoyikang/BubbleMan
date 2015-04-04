@@ -66,11 +66,15 @@ int BzWriteBVector2(byte_t **pbyte, BVector2 *ret)
 int BzReadRoomUser(byte_t **pbyte, RoomUser *ret)
 {
 	BzReadBVector2(pbyte, &ret->pos);
+	BzReadint32(pbyte, &ret->direction);
+	BzReadint32(pbyte, &ret->status);
 	return 0;
 }
 int BzWriteRoomUser(byte_t **pbyte, RoomUser *ret)
 {
 	BzWriteBVector2(pbyte, &ret->pos);
+	BzWriteint32(pbyte, &ret->direction);
+	BzWriteint32(pbyte, &ret->status);
 	return 0;
 }
 int BzReadRoomReadyNtf(byte_t **pbyte, RoomReadyNtf *ret)
@@ -106,6 +110,18 @@ int BzReadRoomCloseNtf(byte_t **pbyte, RoomCloseNtf *ret)
 int BzWriteRoomCloseNtf(byte_t **pbyte, RoomCloseNtf *ret)
 {
 	BzWriteint32(pbyte, &ret->t);
+	return 0;
+}
+int BzReadRoomUserChg(byte_t **pbyte, RoomUserChg *ret)
+{
+	BzReadint32(pbyte, &ret->uid);
+	BzReadRoomUser(pbyte, &ret->user);
+	return 0;
+}
+int BzWriteRoomUserChg(byte_t **pbyte, RoomUserChg *ret)
+{
+	BzWriteint32(pbyte, &ret->uid);
+	BzWriteRoomUser(pbyte, &ret->user);
 	return 0;
 }
 }

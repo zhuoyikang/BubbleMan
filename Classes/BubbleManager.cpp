@@ -38,6 +38,7 @@ void BubbleManager::SetStatus(int id,int status)
         iter!=_bubbleList.end(); ) {
         if((*iter)->GetID()==id){
             (*iter)->SetStatus(status);
+            return;
         }else{
             iter++;
         }
@@ -60,6 +61,7 @@ void BubbleManager::update(float)
             this->removeChild(*iter);
             //log("delete");
             iter=_bubbleList.erase(iter);
+            return;
         }else{
             iter++;
         }

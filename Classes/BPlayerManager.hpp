@@ -21,7 +21,13 @@ public:
     /**
      * 设置某一个玩家的状态.
      */
-    void SetStatus(int id, int direction);
+    void SetStatus(int id, int status);
+    void SetPosition(int id, cocos2d::Point pos);
+
+    /**
+     * 查找玩家
+     */
+    BPlayer* FindPlayer(int id);
 
     CREATE_FUNC(BPlayerManager);
 private:

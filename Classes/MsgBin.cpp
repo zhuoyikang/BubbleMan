@@ -3,8 +3,13 @@
 #include <string.h>
 #include <assert.h>
 
+// #define string std::string
+// #define vector std::vector
+
+
 namespace msgbin
 {
+
     void show_byte(void *buff, size_t size)
     {
         char *buffer=(char *)buff;
@@ -95,7 +100,7 @@ namespace msgbin
     }
 
     //读取字符串 #
-    int BzReadstring(byte_t **pbyte, string *str) {
+    int BzReadstring(byte_t **pbyte, std::string *str) {
         uint16 size;
         BzReaduint16(pbyte, &size);
         char *bstr = (char *)malloc(size+1);
@@ -107,7 +112,7 @@ namespace msgbin
         return 0;
     }
 
-    int BzWritestring(byte_t **pbyte, string *str)
+    int BzWritestring(byte_t **pbyte, std::string *str)
     {
         uint16 size = str->length();
         BzWriteuint16(pbyte, &size);
@@ -135,8 +140,8 @@ namespace msgbin
     {
         byte_t *pbuff = (byte_t *)malloc(100);
         byte_t *backp = pbuff;
-        string in("this is a test");
-        string out;
+        std::string in("this is a test");
+        std::string out;
         BzWritestring(&pbuff, &in);
         BzReadstring(&backp,&out);
         assert(in == out);

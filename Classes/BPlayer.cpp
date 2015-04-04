@@ -1,7 +1,7 @@
 //
 //  BPlayer.cpp
-//  T4
-//
+//  T4/
+
 //  Created by zhuoyikang on 15-3-17.
 //
 //
@@ -22,6 +22,8 @@ BPlayer::BPlayer()
 BPlayer::BPlayer(int id)
 {
     _id=id;
+    _animationNodes[animation_free] =
+        CSLoader::createNode("Animation/animation_front.csb");
     _animationNodes[animation_front] =
         CSLoader::createNode("Animation/animation_front.csb");
     _animationNodes[animation_left] =
@@ -35,6 +37,8 @@ BPlayer::BPlayer(int id)
     _animationNodes[animation_die] =
         CSLoader::createNode("Animation/animation_die.csb");
 
+    _animationActions[animation_free] =
+        CSLoader::createTimeline("Animation/animation_front.csb");
     _animationActions[animation_front] =
         CSLoader::createTimeline("Animation/animation_front.csb");
     _animationActions[animation_left] =
@@ -48,6 +52,7 @@ BPlayer::BPlayer(int id)
     _animationActions[animation_die] =
         CSLoader::createTimeline("Animation/animation_die.csb");
 
+    animationInit(animation_free);  // free== front
     animationInit(animation_front);
     animationInit(animation_left);
     animationInit(animation_right);
@@ -55,10 +60,8 @@ BPlayer::BPlayer(int id)
     animationInit(animation_stuck);
     animationInit(animation_die);
 
-    _currentDirection=-1;
-    _status=player_sts_free;
-
-    SetAnimation(animation_front);
+    _status = -1;
+    SetStatus(animation_free);
 }
 
 void BPlayer::animationInit(int direction)
@@ -69,48 +72,31 @@ void BPlayer::animationInit(int direction)
     _animationNodes[direction]->setVisible(false);
 }
 
-int BPlayer::CurrentDirection()
+int BPlayer::GetStatus()
 {
-    return _currentDirection;
-}
-
-void BPlayer::SetDirection(int direction)
-{
-    if(_status!=player_sts_free){
-        return;
-    }
-    SetAnimation(direction);
-}
-
-void BPlayer::SetAnimation(int direction)
-{
-    if(direction< 0 || direction >= animation_max){
-        return;
-    }
-    if(_currentDirection==direction){
-        return;
-    }
-    if(_currentDirection!=-1){
-        _animationNodes[_currentDirection]->setVisible(false);
-    }
-    _currentDirection=direction;
-    _animationNodes[_currentDirection]->setVisible(true);
+    return _status;
 }
 
 void BPlayer::SetStatus(int status)
 {
-    this->_status=status;
-    if(status==player_sts_stuck){
-        SetAnimation(animation_stuck);
-    }else if(status==player_sts_die){
-        SetAnimation(animation_die);
+    if(status< 0 || status >= animation_max){
+        return;
     }
+    if(_status==status){
+        return;
+    }
+    if(_status!=-1){
+        _animationNodes[_status]->setVisible(false);
+    }
+    _status=status;
+    _animationNodes[_status]->setVisible(true);
+
 }
 
 void BPlayer::setPosition(const cocos2d::Vec2& position)
 {
     //只有自由状态才能移动.
-    if(this->_status!=player_sts_free){
+    if(this->_status==animation_stuck ||this->_status==animation_die){
         return;
     }
 

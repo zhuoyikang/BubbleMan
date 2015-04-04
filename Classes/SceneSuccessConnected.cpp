@@ -1,6 +1,5 @@
 #include "SceneSuccessConnected.hpp"
 #include "const.hpp"
-#include "BubbleApp.hpp"
 
 USING_NS_CC;
 
@@ -62,6 +61,8 @@ void SceneSuccessConnected::RoomReadyNtf(QueueMsg *msg)
 {
     if( gBubbleApp.Status == BUBBLE_APP_STS_SUCCESS ){
         gBubbleApp.Status=BUBBLE_APP_STS_FIGHT;
+        msgbin::byte_t *buffer = (msgbin::byte_t *)msg->D();
+        msgbin::BzReadRoomReadyNtf(&buffer, &gRoomReadNtf);
         gBubbleApp.SceneRoom();
     }
     LOG("RoomReadyNtf");

@@ -12,25 +12,25 @@ namespace msgbin
 
 	struct UserLoginReq
 	{
-		string udid;
+		std::string udid;
 	};
 
 	struct UserLoginAck
 	{
-		string udid;
-		string name;
+		std::string udid;
+		std::string name;
 		int32 level;
 	};
 
 	struct UserJoinReq
 	{
-		string udid;
+		std::string udid;
 	};
 
 	struct UserJoinAck
 	{
-		string udid;
-		string name;
+		std::string udid;
+		std::string name;
 		int32 level;
 	};
 
@@ -43,18 +43,26 @@ namespace msgbin
 	struct RoomUser
 	{
 		BVector2 pos;
+		int32 direction;
+		int32 status;
 	};
 
 	struct RoomReadyNtf
 	{
 		int32 roomId;
-		vector<RoomUser> uPosAll;
+		std::vector<RoomUser> uPosAll;
 		int32 uIdx;
 	};
 
 	struct RoomCloseNtf
 	{
 		int32 t;
+	};
+
+	struct RoomUserChg
+	{
+		int32 uid;
+		RoomUser user;
 	};
 
 	int BzReadUserLoginReq(byte_t **pbyte, UserLoginReq *ret);
@@ -80,6 +88,9 @@ namespace msgbin
 
 	int BzReadRoomCloseNtf(byte_t **pbyte, RoomCloseNtf *ret);
 	int BzWriteRoomCloseNtf(byte_t **pbyte, RoomCloseNtf *ret);
+
+	int BzReadRoomUserChg(byte_t **pbyte, RoomUserChg *ret);
+	int BzWriteRoomUserChg(byte_t **pbyte, RoomUserChg *ret);
 
 }
 

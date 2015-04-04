@@ -5,7 +5,8 @@
 
 BEGIN {
     PayLoadCount = 1
-    LoadType()
+    LoadFunType()
+    LoadStructType()
     LoadPayLoad()
 }
 
@@ -51,27 +52,48 @@ function OutPutDeclareSerialize() {
     }
 }
 
+function LoadFunType()
+{
+    FunTypeMap["bytes"] = "string"
+    FunTypeMap["byte"] = "byte"
+    FunTypeMap["uint32"] = "uint32"
+    FunTypeMap["int32"] = "int32"
+
+    FunTypeMap["uint16"] = "uint16"
+    FunTypeMap["int16"] = "int16"
+
+    FunTypeMap["string"] = "string"
+    FunTypeMap["int"] = "int32"
+    FunTypeMap["integer"] = "int32"
+
+    FunTypeMap["std::string"] = "string"
+    FunTypeMap["uint32_t"] = "uint32"
+    FunTypeMap["int32_t"] = "int32"
+    FunTypeMap["ushort_t"] = "uint16"
+    FunTypeMap["short_t"] = "int16"
+}
 
 
 # 实现类型函数
-function LoadType()
+function LoadStructType()
 {
-    TypeMap["byte"] = "byte"
-    TypeMap["uint32"] = "uint32"
-    TypeMap["int32"] = "int32"
+    StructTypeMap["byte"] = "byte"
+    StructTypeMap["uint32"] = "uint32"
+    StructTypeMap["int32"] = "int32"
 
-    TypeMap["uint16"] = "uint16"
-    TypeMap["int16"] = "int16"
+    StructTypeMap["uint16"] = "uint16"
+    StructTypeMap["int16"] = "int16"
 
-    TypeMap["string"] = "string"
-    TypeMap["int"] = "int32"
-    TypeMap["integer"] = "int32"
+    StructTypeMap["bytes"] = "std::string"
+    StructTypeMap["string"] = "std::string"
+    StructTypeMap["int"] = "int32"
+    StructTypeMap["integer"] = "int32"
 
-    TypeMap["std::string"] = "string"
-    TypeMap["uint32_t"] = "uint32"
-    TypeMap["int32_t"] = "int32"
-    TypeMap["ushort_t"] = "uint16"
-    TypeMap["short_t"] = "int16"
+    StructTypeMap["std::string"] = "std::string"
+    StructTypeMap["uint32_t"] = "uint32"
+    StructTypeMap["int32_t"] = "int32"
+    StructTypeMap["ushort_t"] = "uint16"
+    StructTypeMap["short_t"] = "int16"
 }
 
 # 实现输出函数
@@ -92,15 +114,15 @@ function OutPutPayLoadStruct(Name) {
         type = PayLoadList[Name,StructI,"type"]
         addtion = PayLoadList[Name,StructI,"addtion"]
         if(type == "array") {
-            if(TypeMap[addtion]=="") {
+            if(StructTypeMap[addtion]=="") {
                 addtion=addtion
             }
-            printf("\t\tvector<%s> %s;\n", addtion, name) > "MsgGen.hpp"
+            printf("\t\tstd::vector<%s> %s;\n", addtion, name) > "MsgGen.hpp"
         } else {
-            if(TypeMap[type]=="") {
+            if(StructTypeMap[type]=="") {
                 type=type
             }else{
-                type=TypeMap[type]
+                type=StructTypeMap[type]
             }
             printf("\t\t%s %s;\n", type, name) > "MsgGen.hpp"
         }
@@ -149,8 +171,7 @@ function OutPutSerializeRead(Name) {
         name = PayLoadList[Name,Filedi,"name"]
 
         if (type == "array") {
-
-            if(TypeMap[addtion]=="") {
+            if(FunTypeMap[addtion]=="") {
                 addtion1="*"addtion
             }else{
                 addtion1=addtion
@@ -165,6 +186,10 @@ function OutPutSerializeRead(Name) {
             printf("\t}\n") > "MsgGen.cpp"
 
         } else {
+            if(FunTypeMap[type]!="") {
+                type = FunTypeMap[type]
+            }
+
             printf("\tBzRead%s(pbyte, &ret->%s);\n",type, name) > "MsgGen.cpp"
         }
         OutPutErrCheck()
@@ -184,7 +209,7 @@ function OutPutSerializeWrite(Name) {
 
         if (type == "array") {
 
-            if(TypeMap[addtion]=="") {
+            if(FunTypeMap[addtion]=="") {
                 addtion1="*"addtion
             }else{
                 addtion1=addtion
@@ -198,6 +223,10 @@ function OutPutSerializeWrite(Name) {
             printf("\t}\n") > "MsgGen.cpp"
 
         } else {
+            if(FunTypeMap[type]!="") {
+                type = FunTypeMap[type]
+            }
+
             printf("\tBzWrite%s(pbyte, &ret->%s);\n",type, name) > "MsgGen.cpp"
         }
         OutPutErrCheck()

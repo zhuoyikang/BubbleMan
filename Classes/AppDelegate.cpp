@@ -1,5 +1,4 @@
 #include "AppDelegate.h"
-#include "AminationScene.hpp"
 #include "BeachScene.hpp"
 #include "RockerScene.hpp"
 #include "BubbleScene.hpp"

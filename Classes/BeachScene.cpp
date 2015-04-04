@@ -3,6 +3,7 @@
 
 USING_NS_CC;
 
+msgbin::RoomReadyNtf gRoomReadNtf;
 
 Scene* BeachScene::createScene()
 {
@@ -28,9 +29,7 @@ bool BeachScene::init()
         return false;
     }
 
-    //auto visibleSize=Director::getInstance()->getVisibleSize();
-
-    std::string file="Beach/Beach.tmx";
+    string file="Beach/Beach.tmx";
     auto str=String::createWithContentsOfFile (FileUtils::getInstance()->
                                                  fullPathForFilename(file.c_str()).
                                                  c_str());
@@ -48,15 +47,6 @@ bool BeachScene::init()
     this->addChild(_rocker);
     _rocker->startRocker(true);
 
-
-    _playerSprite=new BPlayer();
-    addChild(_playerSprite,1);
-    //_playerSprite->setAnchorPoint(Vec2(0.5,0));
-    //_playerSprite->setPosition(Point(visibleSize.width/3*1, visibleSize.height/2));
-    _playerSprite->BPlayer::setPosition(Point(64, 132));
-
-    scheduleUpdate();
-
     auto listener=EventListenerTouchOneByOne::create();
     listener->onTouchBegan=[&](Touch *, Event *)->bool { return true; };
     listener->onTouchEnded=CC_CALLBACK_2(BeachScene::onTouchEnded, this);
@@ -70,10 +60,51 @@ bool BeachScene::init()
     _playerManager=BPlayerManager::create();
     addChild(_playerManager);
 
+    initAllPlayer();
+
 
     HandlerMap[6] = &BeachScene::RoomCloseNtf;
+    HandlerMap[7] = &BeachScene::RoomUserChgNtf;
+
+    scheduleUpdate();
 
     return true;
+}
+
+void BeachScene::initAllPlayer()
+{
+    LOG("uidx %d", gRoomReadNtf.uIdx);
+    for(size_t i=0; i<gRoomReadNtf.uPosAll.size(); i++){
+        msgbin::RoomUser u = gRoomReadNtf.uPosAll.at(i);
+        cocos2d::Point pos;
+        pos.x = u.pos.x;
+        pos.y = u.pos.y;
+        pos = positionForTileCoord(pos);
+        u.pos.x= pos.x;
+        u.pos.y= pos.y;
+        gRoomReadNtf.uPosAll[i] = u;
+        _playerManager->MakePlayer(i, pos);
+    }
+}
+
+//同步其他玩家的位置和方向动画和状态。
+void BeachScene::updateAllPlayer()
+{
+    for(size_t i=0; i<gRoomReadNtf.uPosAll.size(); i++) {
+        if( i == (size_t)gRoomReadNtf.uIdx) {
+            //不更新自己
+            continue;
+        }
+        msgbin::RoomUser u = gRoomReadNtf.uPosAll.at(i);
+        cocos2d::Point pos;
+        pos.x = u.pos.x;
+        pos.y = u.pos.y;
+        // LOG("%ld pos x %f  y %f status %d dir %d", i, pos.x, pos.y,
+        //     u.status, u.direction);
+       // _playerManager->SetDirection(i, u.direction);
+        _playerManager->SetStatus(i, u.status);
+        _playerManager->SetPosition(i, pos);
+    }
 }
 
 void BeachScene::setViewPointCenter(Point position)
@@ -82,9 +113,9 @@ void BeachScene::setViewPointCenter(Point position)
     int x=MAX(position.x, winSize.width/2);
     int y=MAX(position.y, winSize.height/2);
     x=MIN(x, (_tileMap->getMapSize().width * this->_tileMap->getTileSize().width)
-            - winSize.width / 2);
+          - winSize.width / 2);
     y=MIN(y, (_tileMap->getMapSize().height * _tileMap->getTileSize().height)
-            - winSize.height / 2);
+          - winSize.height / 2);
     auto actualPosition=Point(x, y);
 
     auto centerOfView=Point(winSize.width/2, winSize.height/2);
@@ -93,12 +124,69 @@ void BeachScene::setViewPointCenter(Point position)
 }
 
 
-void BeachScene::setPlayerPosition(Point position)
+void BeachScene::updateMainPlayerStatus(int direct)
 {
-    _player->setPosition(position);
+    BPlayer* p ;
+    int uid = gRoomReadNtf.uIdx;
+    //LOG("uid %d", uid);
+    if((p = this->_playerManager->FindPlayer(uid)) == NULL){
+        return;
+    }
+
+    auto status = this->rockerToStatus(direct);
+    auto currentPos = p->getPosition();
+    auto pos=playerNextPosition(currentPos,direct);
+
+    if(status == p->GetStatus() && pos == currentPos){
+        return;
+    }
+
+    if(!doesPositionBlock(pos,direct)) {
+        p->setPosition(pos);
+        p->SetStatus(status);
+    }else{
+        p->SetStatus(status);
+    }
+    syncMainPlayerInfo(pos,status);
 }
 
-#define MOVE_STEP 16
+void BeachScene::syncMainPlayerInfo(cocos2d::Point pos, int status)
+{
+    msgbin::byte_t *b1,*b2;
+    msgbin::RoomUser u = gRoomReadNtf.uPosAll.at(gRoomReadNtf.uIdx);
+    u.direction=0;
+    u.status=status;
+    u.pos.x = pos.x;
+    u.pos.y = pos.y;
+
+    msgbin::RoomUserChg chg;
+    chg.uid = gRoomReadNtf.uIdx;
+    chg.user = u;
+
+    //发送登录包
+    b1 = (msgbin::byte_t *)gBubbleApp.Wb;
+    b2 = b1;
+
+    msgbin::BzWriteRoomUserChg(&b1, &chg);
+
+    gBubbleApp.WriteAPI(7, b1-b2);
+    gBubbleApp.SendBytes(gBubbleApp.Wbh, b1-b2+4);
+}
+
+void BeachScene::setMainPlayerPosition(Point position)
+{
+    int uid = gRoomReadNtf.uIdx;
+    this->_playerManager->SetPosition(uid,position);
+}
+
+void BeachScene::setMainPlayerStatus(int d)
+{
+    int uid = gRoomReadNtf.uIdx;
+    this->_playerManager->SetStatus(uid,d);
+}
+
+
+#define MOVE_STEP 4
 
 struct PlayerMoveMap
 {
@@ -118,7 +206,7 @@ struct PlayerMoveMap MoveMap[]={
 
 Point BeachScene::playerNextPosition(Point old_pos, int direct)
 {
-    if(direct<0){
+    if(direct<0) {
         return old_pos;
     }
     auto MoveItem=MoveMap[direct];
@@ -174,21 +262,18 @@ bool BeachScene::doesPositionBlock(Point position,int direct)
 void BeachScene::update(float)
 {
     auto direct=_rocker->GetDirection();
-    _playerSprite->SetDirection(direct);
-    auto pos=playerNextPosition(_playerSprite->getPosition(),direct);
-    if(!doesPositionBlock(pos,direct)) {
-        _playerSprite->setPosition(pos);
-    }
-
+    //更新主角位置
+    updateMainPlayerStatus(direct);
     loopMsg();
+    updateAllPlayer();
 }
 
 void BeachScene::onTouchEnded(Touch *touch, Event *)
 {
     auto touchLocation=touch->getLocation();
-    auto position=_playerSprite->getPosition();
+ //   auto position=_playerSprite->getPosition();
     ////log("current position x %f y %f", touchLocation.x, touchLocation.y);
-    _bubbleManager->MakeBubble(3,position);
+//    _bubbleManager->MakeBubble(3,position);
 
     Point tileCoord=this->tileCoordForPosition(touchLocation);
 
@@ -211,6 +296,15 @@ Point BeachScene::tileCoordForPosition(Point position)
     //    _tileMap->getMapSize().width, _tileMap->getMapSize().height);
     return Point(x, y);
 }
+
+Point BeachScene::positionForTileCoord(cocos2d::Point position)
+{
+    int x = (position.x-1) * _tileMap->getTileSize().width +  _tileMap->getTileSize().width/2;
+    int y = (position.y-1) * _tileMap->getTileSize().height +  _tileMap->getTileSize().height/2;
+    //LOG("PositionFortileCoord point x %d y %d", x, y);
+    return Point(x, y);
+}
+
 
 
 void BeachScene::tileExpolsed(Point tileCoord)
@@ -242,14 +336,44 @@ void BeachScene::RoomCloseNtf(QueueMsg *msg)
 }
 
 
+
+void BeachScene::RoomUserChgNtf(QueueMsg *msg)
+{
+    msgbin::RoomUserChg roomUserChg;
+    msgbin::byte_t *buffer = (msgbin::byte_t *)msg->D();
+    msgbin::BzReadRoomUserChg(&buffer, &roomUserChg);
+
+    //msgbin::RoomUser u = gRoomReadNtf.uPosAll.at(roomUserChg.uid);
+    gRoomReadNtf.uPosAll[roomUserChg.uid] = roomUserChg.user;
+}
+
+
 void BeachScene::loopMsg()
 {
     QueueMsg *msg;
     while (( msg = gBubbleApp.Mq.Pick()) ) {
-        LOG("msg tt %d", msg->T());
+        //LOG("msg tt %d", msg->T());
         BeachSceneFptr h = this->HandlerMap[msg->T()];
         if (h!=NULL) {
             (this->*h)(msg);
         }
     }
+}
+
+
+int BeachScene::rockerToStatus(int d)
+{
+    switch(d){
+    case -1:
+        return animation_free;
+    case rocker_left:
+        return animation_left;
+    case rocker_right:
+        return animation_right;
+    case rocker_up:
+        return animation_back;
+    case rocker_down:
+        return animation_front;
+    }
+    return animation_free;
 }
