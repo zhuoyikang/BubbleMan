@@ -4,6 +4,7 @@
 USING_NS_CC;
 
 msgbin::RoomReadyNtf gRoomReadNtf;
+msgbin::RoomReadyNtf gRoomReadNtfBak;
 
 Scene* BeachScene::createScene()
 {
@@ -270,15 +271,18 @@ void BeachScene::update(float)
 
 void BeachScene::onTouchEnded(Touch *touch, Event *)
 {
-    auto touchLocation=touch->getLocation();
- //   auto position=_playerSprite->getPosition();
-    ////log("current position x %f y %f", touchLocation.x, touchLocation.y);
-//    _bubbleManager->MakeBubble(3,position);
+    //auto touchLocation=touch->getLocation();
+    //将点击的tail删除掉.| 有用。
+    // Point tileCoord=this->tileCoordForPosition(touchLocation);
+    // tileExpolsed(tileCoord);
+    BPlayer* p ;
+    if((p = this->_playerManager->FindPlayer(gRoomReadNtf.uIdx)) == NULL){
+        return;
+    }
 
-    Point tileCoord=this->tileCoordForPosition(touchLocation);
+    auto pos = p->getPosition();
+    _bubbleManager->MakeBubble(2,pos);
 
-    //将点击的tail删除掉.
-    tileExpolsed(tileCoord);
 }
 
 
@@ -330,6 +334,7 @@ void BeachScene::RoomCloseNtf(QueueMsg *msg)
     if( gBubbleApp.Status == BUBBLE_APP_STS_FIGHT ){
         gBubbleApp.Status=BUBBLE_APP_STS_SUCCESS;
         gBubbleApp.SceneSuccess();
+        gRoomReadNtf = gRoomReadNtfBak;
         gBubbleApp.Join();
     }
     LOG("RoomCloseNtf");

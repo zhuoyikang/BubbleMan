@@ -90,7 +90,6 @@ void BPlayer::SetStatus(int status)
     }
     _status=status;
     _animationNodes[_status]->setVisible(true);
-
 }
 
 void BPlayer::setPosition(const cocos2d::Vec2& position)
