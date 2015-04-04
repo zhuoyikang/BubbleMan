@@ -20,6 +20,7 @@ USING_NS_CC;
 
 
 #define IP  "192.168.43.141"
+//#define IP  "127.0.0.1"
 #define PORT 3004
 
 

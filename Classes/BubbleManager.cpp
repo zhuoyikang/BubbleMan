@@ -28,6 +28,7 @@ void BubbleManager::MakeBubble(int id,int power, Point position)
     int now=BTime::GetCurrentUtcSecond();
     auto _bubble = new Bubble(id,power,now+2);
     _bubble->setPosition(position);
+    _bubble->Type=1;
     this->addChild(_bubble);
     this->_bubbleList.pushBack(_bubble);
 }

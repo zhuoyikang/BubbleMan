@@ -84,6 +84,10 @@ public:
      */
     int UpdateStatus(int time);
 
+    /* 类型.
+     */
+    int Type;
+
 private:
     void setStatusEnd();
     int _status;
@@ -95,6 +99,7 @@ private:
      * 十字破坏范围.
      */
     int _power;
+
 
     /**
      * 爆炸时间.

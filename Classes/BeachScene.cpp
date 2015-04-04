@@ -66,6 +66,8 @@ bool BeachScene::init()
 
     HandlerMap[6] = &BeachScene::RoomCloseNtf;
     HandlerMap[7] = &BeachScene::RoomUserChgNtf;
+    HandlerMap[8] = &BeachScene::RoomSetBubbleNtf;
+    HandlerMap[9] = &BeachScene::BubbleBombNtf;
 
     scheduleUpdate();
 
@@ -161,7 +163,7 @@ void BeachScene::syncMainPlayerInfo(cocos2d::Point pos, int status)
     u.pos.y = pos.y;
 
     msgbin::RoomUserChg chg;
-    chg.uid = gRoomReadNtf.uIdx;
+    chg.uIdx = gRoomReadNtf.uIdx;
     chg.user = u;
 
     //发送登录包
@@ -280,9 +282,17 @@ void BeachScene::onTouchEnded(Touch *touch, Event *)
         return;
     }
 
+    //客户端自己设置
     auto pos = p->getPosition();
-    _bubbleManager->MakeBubble(2,pos);
+    // _bubbleManager->MakeBubble(2,pos);
 
+    //向服务器设置
+    msgbin::Bubble bubble;
+    bubble.pos.x = pos.x;
+    bubble.pos.y = pos.y;
+    bubble.power = 2;
+    bubble.keeptime = 10;
+    this->setBubble(bubble);
 }
 
 
@@ -329,7 +339,7 @@ void BeachScene::tileExpolsed(Point tileCoord)
 }
 
 
-void BeachScene::RoomCloseNtf(QueueMsg *msg)
+void BeachScene::RoomCloseNtf(QueueMsg *)
 {
     if( gBubbleApp.Status == BUBBLE_APP_STS_FIGHT ){
         gBubbleApp.Status=BUBBLE_APP_STS_SUCCESS;
@@ -341,6 +351,37 @@ void BeachScene::RoomCloseNtf(QueueMsg *msg)
 }
 
 
+void BeachScene::RoomSetBubbleNtf(QueueMsg *msg)
+{
+    msgbin::SetBubble setBubbleNtf;
+    msgbin::byte_t *buffer = (msgbin::byte_t *)msg->D();
+    msgbin::BzReadSetBubble(&buffer, &setBubbleNtf);
+
+    Point pos;
+
+    //设置客户端显示
+    pos.x = setBubbleNtf.b.pos.x;
+    pos.y = setBubbleNtf.b.pos.y;
+    LOG("idb %d", setBubbleNtf.b.id);
+    _bubbleManager->MakeBubble(setBubbleNtf.b.id, setBubbleNtf.b.power, pos);
+}
+
+void BeachScene::setBubble(msgbin::Bubble bubble)
+{
+    msgbin::byte_t *b1,*b2;
+
+    //发送登录包
+    b1 = (msgbin::byte_t *)gBubbleApp.Wb;
+    b2 = b1;
+
+    msgbin::SetBubble setBubble;
+    setBubble.uIdx = gRoomReadNtf.uIdx;
+    setBubble.b = bubble;
+    msgbin::BzWriteSetBubble(&b1, &setBubble);
+
+    gBubbleApp.WriteAPI(8, b1-b2);
+    gBubbleApp.SendBytes(gBubbleApp.Wbh, b1-b2+4);
+}
 
 void BeachScene::RoomUserChgNtf(QueueMsg *msg)
 {
@@ -349,7 +390,18 @@ void BeachScene::RoomUserChgNtf(QueueMsg *msg)
     msgbin::BzReadRoomUserChg(&buffer, &roomUserChg);
 
     //msgbin::RoomUser u = gRoomReadNtf.uPosAll.at(roomUserChg.uid);
-    gRoomReadNtf.uPosAll[roomUserChg.uid] = roomUserChg.user;
+    gRoomReadNtf.uPosAll[roomUserChg.uIdx] = roomUserChg.user;
+}
+
+
+void BeachScene::BubbleBombNtf(QueueMsg *msg)
+{
+    msgbin::BubbleBomb bubbleBomb;
+    msgbin::byte_t *buffer = (msgbin::byte_t *)msg->D();
+    msgbin::BzReadBubbleBomb(&buffer, &bubbleBomb);
+
+    LOG("bomb id %d", bubbleBomb.id);
+    _bubbleManager->SetStatus(bubbleBomb.id, bubble_sts_expose);
 }
 
 

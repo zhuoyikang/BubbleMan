@@ -24,33 +24,56 @@ level int32
 
 #位置
 BVector2=
-x int
-y int
+x int32
+y int32
 ===
 
 # 地图玩家信息
 RoomUser=
 pos BVector2
-direction int
-status int
+direction int32
+status int32
 ===
 
 # 房间建立ntf
 # uPosAll:地图上所有玩家所在位置
 # uIdx:我在数据中的下标.
 RoomReadyNtf=
-roomId int
+roomId int32
 uPosAll array RoomUser
-uIdx int
+uIdx int32
 ===
 
 #房间关闭.
 RoomCloseNtf=
-t int
+t int32
 ===
 
 #玩家信息包，实时变化.
 RoomUserChg=
-uid int
+uIdx int32
 user RoomUser
+===
+
+#泡泡信息
+Bubble=
+id int32
+pos BVector2
+power int32
+keeptime int32
+===
+
+#设置泡泡
+SetBubble=
+b Bubble
+uIdx int32
+===
+
+# 泡泡爆炸
+# destroyList:被摧毁的tile.
+# destroyUsers:被爆的玩家:des
+BubbleBomb=
+id int32
+destroyTiles array BVector2
+destroyUsers array int32
 ===

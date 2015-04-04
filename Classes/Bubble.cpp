@@ -204,7 +204,7 @@ void Bubble::StateTest()
 
 int Bubble::UpdateStatus(int time)
 {
-    if((time > this->_exposeTime) && (_status==bubble_default)) {
+    if((time > this->_exposeTime) && (_status==bubble_default) && Type==0 ) {
         this->SetStatus(bubble_sts_expose);
         return bubble_sts_expose;
     }

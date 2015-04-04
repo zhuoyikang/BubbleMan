@@ -61,8 +61,29 @@ namespace msgbin
 
 	struct RoomUserChg
 	{
-		int32 uid;
+		int32 uIdx;
 		RoomUser user;
+	};
+
+	struct Bubble
+	{
+		int32 id;
+		BVector2 pos;
+		int32 power;
+		int32 keeptime;
+	};
+
+	struct SetBubble
+	{
+		Bubble b;
+		int32 uIdx;
+	};
+
+	struct BubbleBomb
+	{
+		int32 id;
+		std::vector<BVector2> destroyTiles;
+		std::vector<int32> destroyUsers;
 	};
 
 	int BzReadUserLoginReq(byte_t **pbyte, UserLoginReq *ret);
@@ -91,6 +112,15 @@ namespace msgbin
 
 	int BzReadRoomUserChg(byte_t **pbyte, RoomUserChg *ret);
 	int BzWriteRoomUserChg(byte_t **pbyte, RoomUserChg *ret);
+
+	int BzReadBubble(byte_t **pbyte, Bubble *ret);
+	int BzWriteBubble(byte_t **pbyte, Bubble *ret);
+
+	int BzReadSetBubble(byte_t **pbyte, SetBubble *ret);
+	int BzWriteSetBubble(byte_t **pbyte, SetBubble *ret);
+
+	int BzReadBubbleBomb(byte_t **pbyte, BubbleBomb *ret);
+	int BzWriteBubbleBomb(byte_t **pbyte, BubbleBomb *ret);
 
 }
 

@@ -11,6 +11,7 @@ run:
 	./BubbleApp
 
 g:
+	cp /Users/zhuoyikang/bubble_go/src/bubble/*.txt ./
 	./proto_t.awk  proto.txt
 
 .PHONY:msgbin socknet g

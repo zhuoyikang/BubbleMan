@@ -32,3 +32,13 @@ packet_type:7
 name:RoomUserChg
 payload:RoomUserChg
 desc:房间里的玩家信息包，实时变化.
+
+packet_type:8
+name:SetBubbleReq
+payload:BubbleInfo
+desc:房间里的玩家信息包，实时变化.
+
+packet_type:9
+name:BubbleBomb
+payload:BubbleBomb
+desc:跑跑爆炸

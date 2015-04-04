@@ -75,6 +75,16 @@ public:
      */
     void RoomUserChgNtf(QueueMsg *msg);
 
+    /**
+     * 设置泡泡
+     */
+    void RoomSetBubbleNtf(QueueMsg *msg);
+
+    /**
+     * 爆炸
+     */
+    void BubbleBombNtf(QueueMsg *msg);
+
 private:
     void loopMsg();
 
@@ -90,6 +100,11 @@ private:
     void updateMainPlayerStatus(int d);
     void setMainPlayerPosition(cocos2d::Point position);
     void setMainPlayerStatus(int d);
+
+    /*
+      向服务器发一个泡泡
+     */
+    void setBubble(msgbin::Bubble b);
 
     /**
      * 同步主角信息到服务器.
