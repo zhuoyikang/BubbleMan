@@ -62,6 +62,7 @@ public:
     void tileExpolsed(cocos2d::Point tileCoord);
 
 
+
     CREATE_FUNC(BeachScene);
 
 public:
@@ -117,6 +118,14 @@ private:
      */
     void initAllPlayer();
     void updateAllPlayer();
+
+
+    /**
+     * 转换为中心像素位置.
+     */
+    float fixToMiddleTilePos(float);
+
+
 
 private:
 

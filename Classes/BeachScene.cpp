@@ -283,7 +283,12 @@ void BeachScene::onTouchEnded(Touch *touch, Event *)
     }
 
     //客户端自己设置
-    auto pos = p->getPosition();
+    auto uPos = p->getPosition();
+    auto pos = uPos;
+    pos.x = fixToMiddleTilePos(uPos.x);
+    pos.y = fixToMiddleTilePos(uPos.y);
+    LOG("touch origin x %f y %f", uPos.x, uPos.y);
+    LOG("touch fixed x %f y %f", pos.x, pos.y);
     // _bubbleManager->MakeBubble(2,pos);
 
     //向服务器设置
@@ -433,4 +438,19 @@ int BeachScene::rockerToStatus(int d)
         return animation_front;
     }
     return animation_free;
+}
+
+
+float BeachScene::fixToMiddleTilePos(float pos)
+{
+    pos = pos >= 32 ? pos : 32;
+    float f = (pos - 32) / 64;
+    float b =  (f - int(f / 1));
+    LOG("f %f b %f", f, b);
+    if( b  <= 0.5 ) {
+        f = int(f);
+    }else{
+        f = int(f) + 1;
+    }
+    return f*64 +32;
 }
