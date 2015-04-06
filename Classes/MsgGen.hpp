@@ -86,6 +86,12 @@ namespace msgbin
 		std::vector<int32> destroyUsers;
 	};
 
+	struct RoomUserStatusChg
+	{
+		int32 id;
+		int32 status;
+	};
+
 	int BzReadUserLoginReq(byte_t **pbyte, UserLoginReq *ret);
 	int BzWriteUserLoginReq(byte_t **pbyte, UserLoginReq *ret);
 
@@ -121,6 +127,9 @@ namespace msgbin
 
 	int BzReadBubbleBomb(byte_t **pbyte, BubbleBomb *ret);
 	int BzWriteBubbleBomb(byte_t **pbyte, BubbleBomb *ret);
+
+	int BzReadRoomUserStatusChg(byte_t **pbyte, RoomUserStatusChg *ret);
+	int BzWriteRoomUserStatusChg(byte_t **pbyte, RoomUserStatusChg *ret);
 
 }
 

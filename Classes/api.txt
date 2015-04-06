@@ -42,3 +42,8 @@ packet_type:9
 name:BubbleBomb
 payload:BubbleBomb
 desc:跑跑爆炸
+
+packet_type:10
+name:RoomUserStatusChg
+payload:RoomUserStatusChg
+desc:房间里的玩家信息包，实时变化.

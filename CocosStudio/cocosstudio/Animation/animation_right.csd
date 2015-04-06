@@ -27,15 +27,15 @@
         <PrePosition X="0.0000" Y="0.0000" />
         <PreSize X="0.0000" Y="0.0000" />
         <Children>
-          <NodeObjectData Name="Sprite_1" ActionTag="249944926" FrameEvent="" Tag="17" FlipX="True" ctype="SpriteObjectData">
+          <NodeObjectData Name="Sprite_1" ActionTag="249944926" FrameEvent="" Tag="17" LeftMargin="-37.0000" RightMargin="-37.0000" TopMargin="-52.7000" BottomMargin="-32.3000" FlipX="True" ctype="SpriteObjectData">
             <Position X="0.0000" Y="0.0000" />
             <Scale ScaleX="1.0000" ScaleY="1.0000" />
-            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.3800" />
             <CColor A="255" R="255" G="255" B="255" />
             <Size X="74.0000" Y="85.0000" />
             <PrePosition X="0.0000" Y="0.0000" />
             <PreSize X="0.0000" Y="0.0000" />
-            <FileData Type="MarkedSubImage" Path="Animation/xj_y_move_left_04.png" Plist="Animation/action.plist" />
+            <FileData Type="MarkedSubImage" Path="Animation/xj_y_move_left_01.png" Plist="Animation/action.plist" />
           </NodeObjectData>
         </Children>
       </ObjectData>

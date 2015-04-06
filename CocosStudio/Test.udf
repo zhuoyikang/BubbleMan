@@ -1,4 +1,13 @@
 <UserData>
+  <OpenedDocuments>
+    <FilePathData Path="Animation/animation_back.csd" />
+    <FilePathData Path="Animation/animation_front.csd" />
+    <FilePathData Path="Animation/animation_die.csd" />
+    <FilePathData Path="Animation/animation_left.csd" />
+    <FilePathData Path="Animation/animation_right.csd" />
+    <FilePathData Path="Animation/animation_stuck.csd" />
+  </OpenedDocuments>
+  <ActiveDocument Path="Animation/animation_stuck.csd" />
   <Properties>
     <Item Key="PackageParamsKey">
       <Value ctype="PackageParams">

@@ -188,5 +188,17 @@ int BzWriteBubbleBomb(byte_t **pbyte, BubbleBomb *ret)
 	}
 	return 0;
 }
+int BzReadRoomUserStatusChg(byte_t **pbyte, RoomUserStatusChg *ret)
+{
+	BzReadint32(pbyte, &ret->id);
+	BzReadint32(pbyte, &ret->status);
+	return 0;
+}
+int BzWriteRoomUserStatusChg(byte_t **pbyte, RoomUserStatusChg *ret)
+{
+	BzWriteint32(pbyte, &ret->id);
+	BzWriteint32(pbyte, &ret->status);
+	return 0;
+}
 }
 

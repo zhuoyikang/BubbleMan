@@ -21,15 +21,15 @@
         <PrePosition X="0.0000" Y="0.0000" />
         <PreSize X="0.0000" Y="0.0000" />
         <Children>
-          <NodeObjectData Name="Sprite_1" ActionTag="514326109" FrameEvent="" Tag="7" ctype="SpriteObjectData">
+          <NodeObjectData Name="Sprite_1" ActionTag="514326109" FrameEvent="" Tag="7" LeftMargin="-38.5000" RightMargin="-38.5000" TopMargin="-53.3200" BottomMargin="-32.6800" ctype="SpriteObjectData">
             <Position X="0.0000" Y="0.0000" />
             <Scale ScaleX="1.0000" ScaleY="1.0000" />
-            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.3800" />
             <CColor A="255" R="255" G="255" B="255" />
             <Size X="77.0000" Y="86.0000" />
             <PrePosition X="0.0000" Y="0.0000" />
             <PreSize X="0.0000" Y="0.0000" />
-            <FileData Type="MarkedSubImage" Path="Animation/xj_y_dead_02.png" Plist="Animation/action.plist" />
+            <FileData Type="MarkedSubImage" Path="Animation/xj_y_dead_01.png" Plist="Animation/action.plist" />
           </NodeObjectData>
         </Children>
       </ObjectData>

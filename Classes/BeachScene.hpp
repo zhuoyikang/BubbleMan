@@ -49,6 +49,7 @@ public:
      * 检查位置实时被阻塞.
      */
     bool doesPositionBlock(Point old,int direct);
+    bool doesPositionBlock(Point pos);
 
     /**
      * 根据位置计算tile坐标.
@@ -85,6 +86,11 @@ public:
      * 爆炸
      */
     void BubbleBombNtf(QueueMsg *msg);
+
+    /**
+     * 玩家状态变化
+     */
+    void RoomUserStatusChgNtf(QueueMsg *msg);
 
 private:
     void loopMsg();

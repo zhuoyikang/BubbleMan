@@ -43,8 +43,8 @@ bool BeachScene::init()
     this->_background=_tileMap->getLayer("Background");
 
     _rocker=BRocker::createRocker("Rocker/joystick_bg.png",
-                                    "Rocker/joystick_center.png",
-                                    Point(110,100));
+                                  "Rocker/joystick_center.png",
+                                  Point(110,100));
     this->addChild(_rocker);
     _rocker->startRocker(true);
 
@@ -63,11 +63,11 @@ bool BeachScene::init()
 
     initAllPlayer();
 
-
     HandlerMap[6] = &BeachScene::RoomCloseNtf;
     HandlerMap[7] = &BeachScene::RoomUserChgNtf;
     HandlerMap[8] = &BeachScene::RoomSetBubbleNtf;
     HandlerMap[9] = &BeachScene::BubbleBombNtf;
+    HandlerMap[10] = &BeachScene::RoomUserStatusChgNtf;
 
     scheduleUpdate();
 
@@ -82,7 +82,9 @@ void BeachScene::initAllPlayer()
         cocos2d::Point pos;
         pos.x = u.pos.x;
         pos.y = u.pos.y;
+        LOG("init player src %ld %f %f", i, pos.x ,pos.y);
         pos = positionForTileCoord(pos);
+        LOG("init player chg %ld %f %f", i, pos.x ,pos.y);
         u.pos.x= pos.x;
         u.pos.y= pos.y;
         gRoomReadNtf.uPosAll[i] = u;
@@ -104,7 +106,7 @@ void BeachScene::updateAllPlayer()
         pos.y = u.pos.y;
         // LOG("%ld pos x %f  y %f status %d dir %d", i, pos.x, pos.y,
         //     u.status, u.direction);
-       // _playerManager->SetDirection(i, u.direction);
+        // _playerManager->SetDirection(i, u.direction);
         _playerManager->SetStatus(i, u.status);
         _playerManager->SetPosition(i, pos);
     }
@@ -132,15 +134,20 @@ void BeachScene::updateMainPlayerStatus(int direct)
     BPlayer* p ;
     int uid = gRoomReadNtf.uIdx;
     //LOG("uid %d", uid);
-    if((p = this->_playerManager->FindPlayer(uid)) == NULL){
+    if((p = this->_playerManager->FindPlayer(uid)) == NULL) {
         return;
     }
 
     auto status = this->rockerToStatus(direct);
     auto currentPos = p->getPosition();
     auto pos=playerNextPosition(currentPos,direct);
+    auto currentStatus = p->GetStatus();
 
-    if(status == p->GetStatus() && pos == currentPos){
+    if(currentStatus >= animation_stuck) {
+        return;
+    }
+
+    if(status == currentStatus && pos == currentPos){
         return;
     }
 
@@ -207,6 +214,7 @@ struct PlayerMoveMap MoveMap[]={
     {rocker_stay,0,0},
 };
 
+
 Point BeachScene::playerNextPosition(Point old_pos, int direct)
 {
     if(direct<0) {
@@ -215,12 +223,12 @@ Point BeachScene::playerNextPosition(Point old_pos, int direct)
     auto MoveItem=MoveMap[direct];
     assert(MoveItem.direct==direct);
     auto new_pos=old_pos + Point(MoveItem.x,MoveItem.y);
-    if (new_pos.x +32 <=
+    if (new_pos.x +38 <=
         (_tileMap->getMapSize().width * _tileMap->getTileSize().width) &&
-        new_pos.y +16 <=
+        new_pos.y +44 <=
         (_tileMap->getMapSize().height * _tileMap->getTileSize().height) &&
-        new_pos.y -64 >= 0 &&
-        new_pos.x -32 >= 0)
+        new_pos.y -44 >= 0 &&
+        new_pos.x -38 >= 0)
     {
         return new_pos;
     }else{
@@ -228,23 +236,9 @@ Point BeachScene::playerNextPosition(Point old_pos, int direct)
     }
 }
 
-
-bool BeachScene::doesPositionBlock(Point position,int direct)
+bool BeachScene::doesPositionBlock(Point pos)
 {
-    //return false;
-    position.y=position.y-32;
-
-    if(direct==rocker_up){
-        position.y+=16;
-    }else if(direct==rocker_down){
-        position.y-=32;
-    }else if(direct==rocker_left) {
-        position.x-=32;
-    }else if(direct==rocker_right){
-        position.x+=32;
-    }
-
-    Point tileCoord=this->tileCoordForPosition(position);
+    Point tileCoord=this->tileCoordForPosition(pos);
     //log("xx tile x %f y %f positon %f %f", tileCoord.x,tileCoord.y,
     //    position.x, position.y);
     int tiledGid=_meta->getTileGIDAt(tileCoord);
@@ -261,6 +255,34 @@ bool BeachScene::doesPositionBlock(Point position,int direct)
     return false;
 }
 
+#define BLOCK_RADIO (15)
+
+//获取到玩家4个角的坐标，分别进行冲突检查。
+bool BeachScene::doesPositionBlock(Point pos,int)
+{
+    Point p00,p01,p11,p10;
+    p00 = pos + Point(-BLOCK_RADIO,-BLOCK_RADIO);
+    p01 = pos + Point(-BLOCK_RADIO,BLOCK_RADIO);
+    p11 = pos + Point(BLOCK_RADIO,BLOCK_RADIO);
+    p10 = pos + Point(BLOCK_RADIO,-BLOCK_RADIO);
+
+    if(doesPositionBlock(p00)==true){
+        return true;
+    }
+
+    if(doesPositionBlock(p01)==true){
+        return true;
+    }
+    if(doesPositionBlock(p10)==true){
+        return true;
+    }
+    if(doesPositionBlock(p11)==true){
+        return true;
+    }
+
+    return false;
+}
+
 
 void BeachScene::update(float)
 {
@@ -271,14 +293,23 @@ void BeachScene::update(float)
     updateAllPlayer();
 }
 
-void BeachScene::onTouchEnded(Touch *, Event *)
+void BeachScene::onTouchEnded(Touch *touch, Event *)
 {
-    //auto touchLocation=touch->getLocation();
+    auto touchLocation=touch->getLocation();
     //将点击的tail删除掉.| 有用。
-    // Point tileCoord=this->tileCoordForPosition(touchLocation);
+    //Point tileCoord=this->tileCoordForPosition(touchLocation);
+
+    if(touchLocation.x < 500 &&  touchLocation.y < 500){
+        return;
+    }
+
     // tileExpolsed(tileCoord);
     BPlayer* p ;
-    if((p = this->_playerManager->FindPlayer(gRoomReadNtf.uIdx)) == NULL){
+    if((p = this->_playerManager->FindPlayer(gRoomReadNtf.uIdx)) == NULL) {
+        return;
+    }
+
+    if(p->GetStatus() >= animation_stuck) {
         return;
     }
 
@@ -305,7 +336,7 @@ Point BeachScene::tileCoordForPosition(Point position)
 {
     int x=position.x / _tileMap->getTileSize().width;
     int y=((_tileMap->getMapSize().height *
-              _tileMap->getTileSize().height) - position.y) /
+            _tileMap->getTileSize().height) - position.y) /
         _tileMap->getTileSize().height;
 
     y=MIN(MAX(0, y), _tileMap->getMapSize().height-1);
@@ -318,8 +349,13 @@ Point BeachScene::tileCoordForPosition(Point position)
 
 Point BeachScene::positionForTileCoord(cocos2d::Point position)
 {
-    int x = (position.x-1) * _tileMap->getTileSize().width +  _tileMap->getTileSize().width/2;
-    int y = (position.y-1) * _tileMap->getTileSize().height +  _tileMap->getTileSize().height/2;
+    LOG("map height %f", _tileMap->getMapSize().height);
+    position.y = _tileMap->getMapSize().height - position.y -1;
+
+    int x = (position.x) * _tileMap->getTileSize().width +
+        _tileMap->getTileSize().width/2;
+    int y = (position.y) * _tileMap->getTileSize().height +
+        _tileMap->getTileSize().height/2;
     //LOG("PositionFortileCoord point x %d y %d", x, y);
     return Point(x, y);
 }
@@ -401,6 +437,17 @@ void BeachScene::RoomUserChgNtf(QueueMsg *msg)
 }
 
 
+void BeachScene::RoomUserStatusChgNtf(QueueMsg *msg)
+{
+    msgbin::RoomUserStatusChg chg;
+    msgbin::byte_t *buffer = (msgbin::byte_t *)msg->D();
+    msgbin::BzReadRoomUserStatusChg(&buffer, &chg);
+
+    gRoomReadNtf.uPosAll[chg.id].status = chg.status;
+    _playerManager->SetStatus(chg.id, chg.status);
+    LOG("RoomUserStatusChgNtf %d sts %d", chg.id, chg.status);
+}
+
 void BeachScene::BubbleBombNtf(QueueMsg *msg)
 {
     msgbin::BubbleBomb bubbleBomb;
@@ -410,10 +457,11 @@ void BeachScene::BubbleBombNtf(QueueMsg *msg)
 
     _bubbleManager->SetStatus(bubbleBomb.id, bubble_sts_expose);
     auto destroyTiles = bubbleBomb.destroyTiles;
+    auto destroyUses = bubbleBomb.destroyUsers;
 
     LOG("bomb id %d size %ld", bubbleBomb.id, destroyTiles.size());
 
-    for(int i=0; i< destroyTiles.size(); i++) {
+    for(size_t i=0; i< destroyTiles.size(); i++) {
         auto tile = bubbleBomb.destroyTiles[i];
         Point tileCoord;
         tileCoord.x =tile.x;
@@ -421,6 +469,14 @@ void BeachScene::BubbleBombNtf(QueueMsg *msg)
         LOG("destroy %f %f", tileCoord.x, tileCoord.y);
         this->tileExpolsed(tileCoord);
     }
+
+    //玩家被爆掉。
+    // for(size_t i=0; i< destroyUses.size(); i++) {
+    //     LOG("destroy_use %ld user %d",i, destroyUses[i]);
+    //     _playerManager->SetStatus(destroyUses[i], animation_stuck);
+    //     gRoomReadNtf.uPosAll[destroyUses[i]].status = animation_stuck;
+    // }
+
 }
 
 

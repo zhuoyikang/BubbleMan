@@ -67,6 +67,7 @@ BPlayer::BPlayer(int id)
 void BPlayer::animationInit(int direction)
 {
     this->addChild(_animationNodes[direction]);
+
     _animationNodes[direction]->runAction(_animationActions[direction]);
     _animationActions[direction]->gotoFrameAndPlay(0, true);
     _animationNodes[direction]->setVisible(false);

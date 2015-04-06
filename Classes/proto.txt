@@ -77,3 +77,9 @@ id int32
 destroyTiles array BVector2
 destroyUsers array int32
 ===
+
+# 玩家状态变化
+RoomUserStatusChg=
+id int32
+status int32
+===

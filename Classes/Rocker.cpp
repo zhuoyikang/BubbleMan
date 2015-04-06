@@ -89,6 +89,8 @@ void BRocker::rockerInit(const char* rockerImageName,const char* rockerBGImageNa
 
     rockerBGPosition = position;
     rockerBGR = spRockerBG->getContentSize().width * 0.5;
+    log("rocker x %f y %f", spRockerBG->getContentSize().width,
+        spRockerBG->getContentSize().height);
     rocketDirection = -1;
 }
 
