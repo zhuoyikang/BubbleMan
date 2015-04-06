@@ -189,8 +189,15 @@ void BRocker::onTouchEnded(Touch *pTouch, Event *pEvent)
     {
         return;
     }
+
+    Point point = pTouch->getLocation();
+    Sprite * rocker = (Sprite*)this->getChildByTag(tag_rocker);
+
+    if(! rocker->boundingBox().containsPoint(point)) {
+        return;
+    }
+
     Sprite *rockerBG = (Sprite*)this->getChildByTag(tag_rockerBG);
-    Sprite *rocker = (Sprite*)this->getChildByTag(tag_rocker);
     rocker->stopAllActions();
     rocker->runAction(MoveTo::create(0.08f,rockerBG->getPosition()));
     isCanMove = false;

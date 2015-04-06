@@ -40,6 +40,10 @@ public:
      */
     virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *);
 
+    virtual void onTouchesEnded(const std::vector<Touch*>& touches, Event *);
+    virtual void onTouchesBegan(const std::vector<Touch*>& touches, Event *);
+
+
     /**
      * 用来计算Player移动坐标.
      */

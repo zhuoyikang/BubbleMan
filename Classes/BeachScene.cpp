@@ -47,15 +47,26 @@ bool BeachScene::init()
 
     _rocker=BRocker::createRocker("Rocker/joystick_bg.png",
                                   "Rocker/joystick_center.png",
-                                  Point(110,100));
+                                  Point(150,150));
     this->addChild(_rocker);
     _rocker->startRocker(true);
 
+    //单点触摸
+    /*
     auto listener=EventListenerTouchOneByOne::create();
     listener->onTouchBegan=[&](Touch *, Event *)->bool { return true; };
     listener->onTouchEnded=CC_CALLBACK_2(BeachScene::onTouchEnded, this);
     this->_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
     listener->setSwallowTouches(false);
+    */
+
+    //多点触摸
+    ///*
+    auto listener=EventListenerTouchAllAtOnce::create();
+    listener->onTouchesEnded=CC_CALLBACK_2(BeachScene::onTouchesEnded, this);
+    listener->onTouchesBegan=CC_CALLBACK_2(BeachScene::onTouchesBegan, this);
+    this->_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+    //*/
 
     _bubbleManager=BubbleManager::create();
     addChild(_bubbleManager);
@@ -300,6 +311,28 @@ void BeachScene::update(float)
     loopMsg();
     updateAllPlayer();
 }
+
+
+void BeachScene::onTouchesEnded(const std::vector<Touch*>& touches, Event *e)
+{
+    for (auto &item: touches)       //遍历容器中的各个成员！！！多点触摸时将显示同时显示多个精灵
+    {
+        onTouchEnded(item, e);
+    }
+}
+
+
+void BeachScene::onTouchesBegan(const std::vector<Touch*>& touches, Event *)
+{
+    for (auto &item: touches)       //遍历容器中的各个成员！！！多点触摸时将显示同时显示多个精灵
+    {
+        auto touch = item;
+        auto location = touch->getLocation();
+        //加载一个精灵
+        LOG("touch  begin %f %f", location.x, location.y);
+    }
+}
+
 
 void BeachScene::onTouchEnded(Touch *touch, Event *)
 {
