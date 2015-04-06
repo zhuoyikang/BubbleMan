@@ -153,7 +153,7 @@ void Bubble::releaseExplose()
 }
 
 Bubble::Bubble(int id,int power,int time)
-    :_power(power),_exposeTime(time)
+    :TileX(0),TileY(0),_power(power),_exposeTime(time)
 {
     _id=id;
     _status = bubble_sts_def;

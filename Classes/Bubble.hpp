@@ -88,12 +88,17 @@ public:
      */
     int Type;
 
+    int TileX;
+    int TileY;
+
+
 private:
     void setStatusEnd();
     int _status;
 
     CocosStudioRes* _powerRes[wave_power_max];
     CocosStudioRes _waveRes[bubble_max];
+
 
     /**
      * 十字破坏范围.

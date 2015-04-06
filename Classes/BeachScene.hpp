@@ -52,7 +52,7 @@ public:
     /**
      * 检查位置实时被阻塞.
      */
-    bool doesPositionBlock(Point old,int direct);
+    bool doesPositionBlock(Point old,Point npos);
     bool doesPositionBlock(Point pos);
 
     /**

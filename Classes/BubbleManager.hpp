@@ -9,6 +9,8 @@
 #include "Bubble.hpp"
 #include "cocos2d.h"
 
+class Bubble;
+
 
 /**
  * 管理和生成场景中出现的所有Bubble.
@@ -24,12 +26,12 @@ public:
      * @param power 是泡泡的攻击范围
      * @param pos 是泡泡的位置
      */
-    void MakeBubble(int id,int power, cocos2d::Point pos);
+    Bubble* MakeBubble(int id,int power, cocos2d::Point pos);
 
     /**
      * @see MakeBubble()
      */
-    void MakeBubble(int power, cocos2d::Point);
+    Bubble* MakeBubble(int power, cocos2d::Point);
 
     /**
      * 设置某个泡泡爆炸，设置后泡泡会自动被销毁.
@@ -38,6 +40,9 @@ public:
     void Explose(int id);
 
     void SetStatus(int id,int status);
+
+    //是否 block
+    bool doesBlock(int x, int y);
 
     /**
      * 自动根据泡泡的爆炸时间计算泡泡的爆炸和销毁状态

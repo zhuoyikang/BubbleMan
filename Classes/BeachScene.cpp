@@ -35,8 +35,8 @@ bool BeachScene::init()
 
     string file="Beach/Beach.tmx";
     auto str=String::createWithContentsOfFile (FileUtils::getInstance()->
-                                                 fullPathForFilename(file.c_str()).
-                                                 c_str());
+                                               fullPathForFilename(file.c_str()).
+                                               c_str());
     this->_tileMap=TMXTiledMap::createWithXML(str->getCString(),"");
     addChild(_tileMap, -1);
 
@@ -170,7 +170,7 @@ void BeachScene::updateMainPlayerStatus(int direct)
         return;
     }
 
-    if(!doesPositionBlock(pos,direct)) {
+    if(!doesPositionBlock(currentPos,pos)) {
         p->setPosition(pos);
         p->SetStatus(status);
     }else{
@@ -271,31 +271,39 @@ bool BeachScene::doesPositionBlock(Point pos)
             }
         }
     }
+
     return false;
 }
 
-#define BLOCK_RADIO (15)
+#define BLOCK_RADIO (12)
 
 //获取到玩家4个角的坐标，分别进行冲突检查。
-bool BeachScene::doesPositionBlock(Point pos,int)
+bool BeachScene::doesPositionBlock(Point cpos,Point npos)
 {
     Point p00,p01,p11,p10;
-    p00 = pos + Point(-BLOCK_RADIO,-BLOCK_RADIO);
-    p01 = pos + Point(-BLOCK_RADIO,BLOCK_RADIO);
-    p11 = pos + Point(BLOCK_RADIO,BLOCK_RADIO);
-    p10 = pos + Point(BLOCK_RADIO,-BLOCK_RADIO);
+
+
+    p00 = npos + Point(-BLOCK_RADIO,-BLOCK_RADIO);
+    p01 = npos + Point(-BLOCK_RADIO,BLOCK_RADIO);
+    p11 = npos + Point(BLOCK_RADIO,BLOCK_RADIO);
+    p10 = npos + Point(BLOCK_RADIO,-BLOCK_RADIO);
 
     if(doesPositionBlock(p00)==true){
         return true;
     }
+    if(doesPositionBlock(p01)==true ){
+        return true;
+    }
+    if(doesPositionBlock(p10)==true  ){
+        return true;
+    }
+    if(doesPositionBlock(p11)==true ){
+        return true;
+    }
 
-    if(doesPositionBlock(p01)==true){
-        return true;
-    }
-    if(doesPositionBlock(p10)==true){
-        return true;
-    }
-    if(doesPositionBlock(p11)==true){
+    auto tileN = tileCoordForPosition(npos);
+    if(tileCoordForPosition(cpos) != tileN
+       && _bubbleManager->doesBlock(tileN.x, tileN.y)) {
         return true;
     }
 
@@ -449,7 +457,11 @@ void BeachScene::RoomSetBubbleNtf(QueueMsg *msg)
     LOG("idb %d ", setBubbleNtf.b.id);
     LOG("pos1 x %f y %f ", pos1.x, pos1.y);
     LOG("pos2 x %f y %f ", pos2.x, pos2.y);
-    _bubbleManager->MakeBubble(setBubbleNtf.b.id, setBubbleNtf.b.power, pos2);
+    auto bubble = _bubbleManager->MakeBubble(setBubbleNtf.b.id,
+                                             setBubbleNtf.b.power,
+                                             pos2);
+    bubble->TileX = pos1.x;
+    bubble->TileY = pos1.y;
 }
 
 void BeachScene::setBubble(msgbin::Bubble bubble)

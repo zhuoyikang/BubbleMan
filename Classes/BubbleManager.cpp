@@ -18,12 +18,12 @@ bool BubbleManager::init()
     return true;
 }
 
-void BubbleManager::MakeBubble(int power, cocos2d::Point position)
+Bubble* BubbleManager::MakeBubble(int power, cocos2d::Point position)
 {
-    MakeBubble(newId(),power,position);
+    return MakeBubble(newId(),power,position);
 }
 
-void BubbleManager::MakeBubble(int id,int power, Point position)
+Bubble* BubbleManager::MakeBubble(int id,int power, Point position)
 {
     int now=BTime::GetCurrentUtcSecond();
     auto _bubble = new Bubble(id,power,now+2);
@@ -31,6 +31,7 @@ void BubbleManager::MakeBubble(int id,int power, Point position)
     _bubble->Type=1;
     this->addChild(_bubble);
     this->_bubbleList.pushBack(_bubble);
+    return _bubble;
 }
 
 void BubbleManager::SetStatus(int id,int status)
@@ -67,4 +68,18 @@ void BubbleManager::update(float)
             iter++;
         }
     }
+}
+
+
+bool BubbleManager::doesBlock(int x, int y)
+{
+    for(cocos2d::Vector<Bubble*>::iterator iter=_bubbleList.begin();
+        iter!=_bubbleList.end(); ) {
+        if((*iter)->TileX==x && (*iter)->TileY==y){
+            return true;
+        }else{
+            iter++;
+        }
+    }
+    return false;
 }
