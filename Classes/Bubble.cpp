@@ -97,6 +97,8 @@ void Bubble::initExplose()
     _waveRes[wave_top_end].Node->setPosition(Point(0,(TILE_SIZE)*(_power+1)));
     _waveRes[wave_below_end].Node->setPosition(Point(0,(-TILE_SIZE)*(_power+1)));
 
+    LOG("Power %d", _power);
+
     // 初始化Power资源.
     for(int i=0;i<wave_power_max;i++) {
         assert(i==(WavePowerMap[i].action));

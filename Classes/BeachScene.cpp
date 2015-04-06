@@ -77,7 +77,7 @@ bool BeachScene::init()
 void BeachScene::initAllPlayer()
 {
     LOG("uidx %d", gRoomReadNtf.uIdx);
-    for(size_t i=0; i<gRoomReadNtf.uPosAll.size(); i++){
+    for(size_t i=0; i<gRoomReadNtf.uPosAll.size(); i++) {
         msgbin::RoomUser u = gRoomReadNtf.uPosAll.at(i);
         cocos2d::Point pos;
         pos.x = u.pos.x;
@@ -271,7 +271,7 @@ void BeachScene::update(float)
     updateAllPlayer();
 }
 
-void BeachScene::onTouchEnded(Touch *touch, Event *)
+void BeachScene::onTouchEnded(Touch *, Event *)
 {
     //auto touchLocation=touch->getLocation();
     //将点击的tail删除掉.| 有用。
@@ -284,19 +284,19 @@ void BeachScene::onTouchEnded(Touch *touch, Event *)
 
     //客户端自己设置
     auto uPos = p->getPosition();
-    auto pos = uPos;
-    pos.x = fixToMiddleTilePos(uPos.x);
-    pos.y = fixToMiddleTilePos(uPos.y);
-    LOG("touch origin x %f y %f", uPos.x, uPos.y);
-    LOG("touch fixed x %f y %f", pos.x, pos.y);
-    // _bubbleManager->MakeBubble(2,pos);
+    auto pos = this->tileCoordForPosition(uPos);
+    // pos.x = fixToMiddleTilePos(uPos.x);
+    // pos.y = fixToMiddleTilePos(uPos.y);
+    // LOG("touch origin x %f y %f", uPos.x, uPos.y);
+    // LOG("touch fixed x %f y %f", pos.x, pos.y);
+    // // _bubbleManager->MakeBubble(2,pos);
 
     //向服务器设置
     msgbin::Bubble bubble;
     bubble.pos.x = pos.x;
     bubble.pos.y = pos.y;
-    bubble.power = 2;
-    bubble.keeptime = 10;
+    bubble.power = 1;
+    bubble.keeptime = 3;
     this->setBubble(bubble);
 }
 
@@ -323,8 +323,6 @@ Point BeachScene::positionForTileCoord(cocos2d::Point position)
     //LOG("PositionFortileCoord point x %d y %d", x, y);
     return Point(x, y);
 }
-
-
 
 void BeachScene::tileExpolsed(Point tileCoord)
 {
@@ -362,13 +360,17 @@ void BeachScene::RoomSetBubbleNtf(QueueMsg *msg)
     msgbin::byte_t *buffer = (msgbin::byte_t *)msg->D();
     msgbin::BzReadSetBubble(&buffer, &setBubbleNtf);
 
-    Point pos;
+    Point pos1,pos2;
 
     //设置客户端显示
-    pos.x = setBubbleNtf.b.pos.x;
-    pos.y = setBubbleNtf.b.pos.y;
-    LOG("idb %d", setBubbleNtf.b.id);
-    _bubbleManager->MakeBubble(setBubbleNtf.b.id, setBubbleNtf.b.power, pos);
+    pos1.x = setBubbleNtf.b.pos.x;
+    pos1.y = setBubbleNtf.b.pos.y;
+
+    pos2 = this->positionForTileCoord(pos1);
+    LOG("idb %d ", setBubbleNtf.b.id);
+    LOG("pos1 x %f y %f ", pos1.x, pos1.y);
+    LOG("pos2 x %f y %f ", pos2.x, pos2.y);
+    _bubbleManager->MakeBubble(setBubbleNtf.b.id, setBubbleNtf.b.power, pos2);
 }
 
 void BeachScene::setBubble(msgbin::Bubble bubble)
@@ -405,8 +407,20 @@ void BeachScene::BubbleBombNtf(QueueMsg *msg)
     msgbin::byte_t *buffer = (msgbin::byte_t *)msg->D();
     msgbin::BzReadBubbleBomb(&buffer, &bubbleBomb);
 
-    LOG("bomb id %d", bubbleBomb.id);
+
     _bubbleManager->SetStatus(bubbleBomb.id, bubble_sts_expose);
+    auto destroyTiles = bubbleBomb.destroyTiles;
+
+    LOG("bomb id %d size %ld", bubbleBomb.id, destroyTiles.size());
+
+    for(int i=0; i< destroyTiles.size(); i++) {
+        auto tile = bubbleBomb.destroyTiles[i];
+        Point tileCoord;
+        tileCoord.x =tile.x;
+        tileCoord.y =tile.y;
+        LOG("destroy %f %f", tileCoord.x, tileCoord.y);
+        this->tileExpolsed(tileCoord);
+    }
 }
 
 

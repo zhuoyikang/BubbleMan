@@ -79,8 +79,6 @@ int SockApp::Connect(const char *host, int port)
     }
 }
 
-
-
 void SockApp::ShowByte(string title, void *buff, size_t size)
 {
     char *buffer=(char *)buff;
@@ -89,7 +87,6 @@ void SockApp::ShowByte(string title, void *buff, size_t size)
         printf("%x ", (unsigned char)buffer[i]);
     }
     LOG("\n");
-
 }
 
 void* _sockNetwork(void *p)

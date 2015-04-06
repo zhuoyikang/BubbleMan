@@ -18,11 +18,9 @@ USING_NS_CC;
 #define LOG(fmt,args...)  do{ printf(fmt "\n",##args);fflush(stdout);} while(0)
 #endif
 
-
-#define IP  "192.168.43.141"
-//#define IP  "127.0.0.1"
+//#define IP  "192.168.43.141"
+#define IP  "192.168.199.188"
 #define PORT 3004
-
 
 #include "MsgBin.hpp"
 #include "MsgGen.hpp"
