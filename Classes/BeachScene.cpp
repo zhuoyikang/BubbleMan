@@ -1,7 +1,10 @@
 #include "BeachScene.hpp"
 #include "BubbleApp.hpp"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
+
+using namespace CocosDenshion;
 
 msgbin::RoomReadyNtf gRoomReadNtf;
 msgbin::RoomReadyNtf gRoomReadNtfBak;
@@ -70,6 +73,11 @@ bool BeachScene::init()
     HandlerMap[10] = &BeachScene::RoomUserStatusChgNtf;
 
     scheduleUpdate();
+
+    SimpleAudioEngine::getInstance()->preloadEffect("music/bomb_break.mp3");
+    SimpleAudioEngine::getInstance()->preloadEffect("music/bomb_on.mp3");
+    SimpleAudioEngine::getInstance()->playEffect("music/readygo_music.mp3");
+    SimpleAudioEngine::getInstance()->playBackgroundMusic("music/bg.mp3", true);
 
     return true;
 }
@@ -322,6 +330,8 @@ void BeachScene::onTouchEnded(Touch *touch, Event *)
     // LOG("touch fixed x %f y %f", pos.x, pos.y);
     // // _bubbleManager->MakeBubble(2,pos);
 
+    SimpleAudioEngine::getInstance()->playEffect("music/bomb_on.mp3");
+
     //向服务器设置
     msgbin::Bubble bubble;
     bubble.pos.x = pos.x;
@@ -469,6 +479,8 @@ void BeachScene::BubbleBombNtf(QueueMsg *msg)
         LOG("destroy %f %f", tileCoord.x, tileCoord.y);
         this->tileExpolsed(tileCoord);
     }
+
+    SimpleAudioEngine::getInstance()->playEffect("music/bomb_break.mp3");
 
     //玩家被爆掉。
     // for(size_t i=0; i< destroyUses.size(); i++) {
