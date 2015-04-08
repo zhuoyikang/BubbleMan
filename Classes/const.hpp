@@ -19,7 +19,10 @@ USING_NS_CC;
 #endif
 
 //#define IP  "192.168.43.141"
-#define IP  "192.168.199.188"
+//#define IP  "192.168.199.188"
+#define IP  "172.20.102.40"
+//#define IP "192.168.0.105"
+
 #define PORT 3004
 
 #include "MsgBin.hpp"
